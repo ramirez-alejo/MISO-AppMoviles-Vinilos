@@ -6,6 +6,6 @@ class AlbumRepository (
     private val cache: IAlbumCache,
     private val remote: IVinilosApi
 ) {
-    suspend fun getAlbums() = cache.getAlbums() ?: remote.getAlbums()
+    suspend fun getAlbums() : List<Album>? = cache.getAlbums() ?: remote.getAlbums()
     suspend fun getAlbumById(id: Int) = cache.getAlbumById(id) ?: remote.getAlbumById(id)
 }
