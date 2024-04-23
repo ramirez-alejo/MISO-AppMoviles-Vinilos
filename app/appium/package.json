@@ -1,0 +1,12 @@
+{
+  "name": "appium",
+  "module": "index.ts",
+  "type": "module",
+  "dependencies": {
+    "appium": "^2.5.4"
+  },
+  "devDependencies": {
+    "appium-espresso-driver": "^2.38.2",
+    "appium-uiautomator2-driver": "^3.1.0"
+  }
+}
