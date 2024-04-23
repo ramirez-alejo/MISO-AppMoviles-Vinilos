@@ -1,4 +1,4 @@
-package com.example.viniloscompose.data.api
+package com.example.viniloscompose.model.data.api
 
 import com.example.viniloscompose.model.album.Album
 

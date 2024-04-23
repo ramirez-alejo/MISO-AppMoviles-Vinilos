@@ -1,4 +1,4 @@
-package com.example.viniloscompose.ui.theme
+package com.example.viniloscompose.view.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

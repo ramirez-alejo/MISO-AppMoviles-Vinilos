@@ -1,4 +1,4 @@
-package com.example.viniloscompose.data
+package com.example.viniloscompose.model.data
 
 import androidx.room.Delete
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package com.example.viniloscompose.ui.theme
+package com.example.viniloscompose.view.theme
 
 import android.app.Activity
 import android.os.Build

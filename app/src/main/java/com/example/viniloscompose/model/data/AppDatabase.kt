@@ -1,10 +1,10 @@
-package com.example.viniloscompose.data
+package com.example.viniloscompose.model.data
 
 import android.app.Application
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.example.viniloscompose.data.album.AlbumDao
+import com.example.viniloscompose.model.data.album.AlbumDao
 import com.example.viniloscompose.model.album.Album
 
 private const val DATABASE_VERSION = 1

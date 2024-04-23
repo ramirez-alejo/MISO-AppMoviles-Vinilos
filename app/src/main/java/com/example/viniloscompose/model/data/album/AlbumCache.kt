@@ -1,4 +1,4 @@
-package com.example.viniloscompose.data.album
+package com.example.viniloscompose.model.data.album
 
 import com.example.viniloscompose.model.album.Album
 import com.example.viniloscompose.model.album.IAlbumCache

@@ -1,9 +1,9 @@
-package com.example.viniloscompose.data.album
+package com.example.viniloscompose.model.data.album
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.example.viniloscompose.data.BaseDao
+import com.example.viniloscompose.model.data.BaseDao
 
 @Dao
 interface AlbumDao : BaseDao<AlbumEntity> {

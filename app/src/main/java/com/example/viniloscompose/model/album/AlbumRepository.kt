@@ -1,6 +1,6 @@
 package com.example.viniloscompose.model.album
 
-import com.example.viniloscompose.data.api.IVinilosApi
+import com.example.viniloscompose.model.data.api.IVinilosApi
 import com.example.viniloscompose.utils.ResourceGroup
 import kotlinx.coroutines.flow.Flow
 

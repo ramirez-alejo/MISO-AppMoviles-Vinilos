@@ -1,4 +1,4 @@
-package com.example.viniloscompose.data.album
+package com.example.viniloscompose.model.data.album
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
