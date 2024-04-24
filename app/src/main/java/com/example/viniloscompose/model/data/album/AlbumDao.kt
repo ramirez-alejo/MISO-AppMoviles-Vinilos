@@ -8,13 +8,13 @@ import com.example.viniloscompose.model.data.BaseDao
 @Dao
 interface AlbumDao : BaseDao<AlbumEntity> {
     @Query("SELECT * FROM albums")
-    suspend fun getAlbums(): List<AlbumEntity>
+    fun getAlbums(): List<AlbumEntity>
 
     @Query("SELECT * FROM albums WHERE id = :id")
-    suspend fun getAlbumById(id: Int): AlbumEntity
+    fun getAlbumById(id: Int): AlbumEntity
 
     @Query("DELETE FROM albums")
-    suspend fun deleteAllAlbums()
+    fun deleteAllAlbums()
 
 }
 

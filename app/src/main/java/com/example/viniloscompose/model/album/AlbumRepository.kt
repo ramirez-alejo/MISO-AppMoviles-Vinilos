@@ -19,4 +19,16 @@ class AlbumRepository (
     )
     suspend fun getAlbums(force: Boolean) : Flow<List<Album>?> = resourceGroup.query(Unit, force)
     suspend fun getAlbumById(id: Int, force: Boolean) : Flow<Album?> = resourceGroup.queryByKey(id, Unit, force)
+
+    companion object {
+        private var instance: AlbumRepository? = null
+
+        fun getInstance(cache: IAlbumCache, remote: IVinilosApi): AlbumRepository {
+            if (instance == null) {
+                instance = AlbumRepository(cache, remote)
+            }
+            return instance!!
+        }
+
+    }
 }
