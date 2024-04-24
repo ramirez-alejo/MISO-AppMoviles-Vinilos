@@ -4,10 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.viniloscompose.ui.screens.AlbumScreen
+import com.example.viniloscompose.ui.screens.CollectorScreen
 import com.example.viniloscompose.ui.screens.InicioScreen
 import com.example.viniloscompose.ui.screens.MusicianScreen
-import com.example.viniloscompose.viewModel.MusicianViewModel
-import androidx.activity.viewModels
+
 
 @Composable
 fun AppNavigation(){
@@ -18,6 +19,12 @@ fun AppNavigation(){
         }
         composable(route = AppScreens.MusicianScreen.route){
             MusicianScreen(navController)
+        }
+        composable(route = AppScreens.AlbumScreen.route){
+            AlbumScreen(navController)
+        }
+        composable(route = AppScreens.CollectorScreen.route){
+            CollectorScreen(navController)
         }
 
     }
