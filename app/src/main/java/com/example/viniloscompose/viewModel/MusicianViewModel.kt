@@ -6,7 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.MusicianDto
-import com.example.viniloscompose.model.service.IMusicianService
+import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.viewModel.state.MucisianState
 import kotlinx.coroutines.launch
 
@@ -22,8 +22,8 @@ class MusicianViewModel: ViewModel() {
             state = state.copy(
                 isLoading = true
             )
-            val musicianService = IMusicianService.getInstace()
-            val musicianList = musicianService.getMusicians()
+            val musicianRepositor = MusicianRepository.getInstance()
+            val musicianList = musicianRepositor.getMusicians()
             response = musicianList
 
             state = state.copy(
