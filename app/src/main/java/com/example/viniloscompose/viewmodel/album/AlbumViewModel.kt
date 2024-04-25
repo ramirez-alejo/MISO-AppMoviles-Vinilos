@@ -11,7 +11,7 @@ import com.example.viniloscompose.model.album.GetAlbumsUseCase
 import com.example.viniloscompose.model.data.AppDatabase
 import com.example.viniloscompose.model.data.ExceptionHandler
 import com.example.viniloscompose.model.data.album.AlbumCache
-import com.example.viniloscompose.model.data.api.VinilosApi
+import com.example.viniloscompose.model.data.api.IVinilosApi
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class AlbumViewModel(
+class AlbumViewModel @Inject constructor(
     private val getAlbumsUseCase: GetAlbumsUseCase
 ) : ViewModel() {
 
@@ -57,16 +57,37 @@ class AlbumViewModel(
 
     companion object {
         private val exceptionHandler = ExceptionHandler()
-        fun provideAlbumViewModel(context: Context,
-                                  getAlbumsUseCase: GetAlbumsUseCase = GetAlbumsUseCase(
-                                        AlbumRepository.getInstance(
-                                            AlbumCache(AppDatabase.getInstance(context).albumDao()
-                                                , exceptionHandler),
-                                            VinilosApi(context)
-                                        ),
-                                      exceptionHandler
-                                  )
-        ) = AlbumViewModel(getAlbumsUseCase)
+        fun provideAlbumViewModel(context: Context): AlbumViewModel {
+            // Step 1: Create an instance of AppDatabase
+            val appDatabase = AppDatabase.getInstance(context)
+            println("AppDatabase instance created: $appDatabase")
+
+            // Step 2: Create an instance of ExceptionHandler
+            val exceptionHandler = ExceptionHandler()
+            println("ExceptionHandler instance created: $exceptionHandler")
+
+            // Step 3: Create an instance of AlbumCache
+            val albumCache = AlbumCache(appDatabase.albumDao(), exceptionHandler)
+            println("AlbumCache instance created: $albumCache")
+
+            // Step 4: Create an instance of IVinilosApi
+            val iVinilosApi = IVinilosApi.getInstance()
+            println("IVinilosApi instance created: $iVinilosApi")
+
+            // Step 5: Create an instance of AlbumRepository
+            val albumRepository = AlbumRepository.getInstance(albumCache, iVinilosApi)
+            println("AlbumRepository instance created: $albumRepository")
+
+            // Step 6: Create an instance of GetAlbumsUseCase
+            val getAlbumsUseCase = GetAlbumsUseCase(albumRepository, exceptionHandler)
+            println("GetAlbumsUseCase instance created: $getAlbumsUseCase")
+
+            // Step 7: Create an instance of AlbumViewModel
+            val albumViewModel = AlbumViewModel(getAlbumsUseCase)
+            println("AlbumViewModel instance created: $albumViewModel")
+
+            return albumViewModel
+        }
     }
 
 
