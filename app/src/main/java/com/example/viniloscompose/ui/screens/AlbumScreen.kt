@@ -160,7 +160,7 @@ fun CardAlbum(item: AlbumDto) {
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp)) // Add spacing between album cover and text
+            Spacer(modifier = Modifier.width(16.dp))
 
             // Column for album details
             Column(
@@ -169,14 +169,14 @@ fun CardAlbum(item: AlbumDto) {
             ) {
                 Text(
                     text = item.name,
-                    style = MaterialTheme.typography.bodyMedium, // Use Material Typography for text style
-                    color = Color.Black // Adjust text color to match Figma design
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
                 )
-                Spacer(modifier = Modifier.height(4.dp)) // Add vertical spacing between text
+                Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = item.genre,
-                    style = MaterialTheme.typography.labelSmall, // Use Material Typography for text style
-                    color = Color.Gray // Adjust text color to match Figma design
+                    text = item.performers.joinToString { it.name },
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color.Gray
                 )
             }
         }
