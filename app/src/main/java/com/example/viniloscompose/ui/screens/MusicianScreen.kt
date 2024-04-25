@@ -39,6 +39,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -55,6 +57,7 @@ import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -67,6 +70,9 @@ fun MusicianScreen(
     Scaffold(
         bottomBar = {
             BottomNavigation(navController)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.MUSICIAN_SCREEN.value
         }
     ) {
 
@@ -177,7 +183,7 @@ fun CardMusician(item: MusicianDto) {
                     contentDescription = null,
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable {  }
+                        .clickable { }
                 )
             }
         }

@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextOverflow
@@ -19,17 +21,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CollectorScreen(navController: NavController){
+fun CollectorScreen(navController: NavController) {
     Scaffold(
         bottomBar = {
             BottomNavigation(navController)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.COLLECTOR_SCREEN.value
         }
     ) {
-        Column (
+        Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally

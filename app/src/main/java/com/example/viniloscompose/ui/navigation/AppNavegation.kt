@@ -1,6 +1,9 @@
 package com.example.viniloscompose.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,19 +14,21 @@ import com.example.viniloscompose.ui.screens.MusicianScreen
 
 
 @Composable
-fun AppNavigation(){
+fun AppNavigation() {
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = AppScreens.InicioScreen.route ){
-        composable(route = AppScreens.InicioScreen.route ){
+    NavHost(
+        navController = navController,
+        startDestination = AppScreens.InicioScreen.route) {
+        composable(route = AppScreens.InicioScreen.route) {
             InicioScreen(navController)
         }
-        composable(route = AppScreens.MusicianScreen.route){
+        composable(route = AppScreens.MusicianScreen.route) {
             MusicianScreen(navController)
         }
-        composable(route = AppScreens.AlbumScreen.route){
+        composable(route = AppScreens.AlbumScreen.route) {
             AlbumScreen(navController)
         }
-        composable(route = AppScreens.CollectorScreen.route){
+        composable(route = AppScreens.CollectorScreen.route) {
             CollectorScreen(navController)
         }
 
