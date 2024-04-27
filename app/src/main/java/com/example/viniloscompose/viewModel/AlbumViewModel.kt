@@ -34,6 +34,11 @@ open class AlbumViewModel : ViewModel() {
         }
     }
 
+
+    fun getFilteredAlbums(query: String): List<AlbumDto> {
+        return response.filter { it.name.contains(query, true) }
+    }
+
     protected fun setState(albums: List<AlbumDto>, isLoading: Boolean) {
         state = AlbumState(
             albums = albums,

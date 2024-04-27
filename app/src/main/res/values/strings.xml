@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">VinilosCompose</string>
     <string name="seleccione_la_categoria">Selecciona la categoría a la que perteneces</string>
+    <string name="explora_albumes">Explora álbumes</string>
+    <string name="buscar_album">Busca álbumes ahora</string>
+    <string name="artistas_del_momento">Artistas del momento</string>
+    <string name="artista">Artista</string>
+    <string name="buscar_artista">Busca tus artistas favoritos</string>
 </resources>

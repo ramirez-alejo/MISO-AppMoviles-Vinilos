@@ -1,7 +1,6 @@
 package com.example.viniloscompose.ui.screens
 
 import android.annotation.SuppressLint
-import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -35,11 +33,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -95,8 +91,7 @@ fun AlbumScreen(
                 Column() {
                     SearchBarAlbum(onFilter = fun(newQuery: String) { query = newQuery })
                     Spacer(modifier = Modifier.height(16.dp))
-                    val filteredAlbums =
-                        albumViewModel.response.filter { it.name.contains(query, true) }
+                    val filteredAlbums = albumViewModel.getFilteredAlbums(query)
                     BodyAlbumContent(filteredAlbums)
                 }
 
@@ -109,7 +104,9 @@ fun AlbumScreen(
 @Composable
 fun BodyAlbumContent(albums: List<AlbumDto>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -129,11 +126,11 @@ fun TitleAlbum() {
         Text(formattedDate)
         Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = "Explora Álbumes",
+            text = stringResource(id = R.string.explora_albumes),
             modifier = Modifier.padding(
                 top = 8.dp,
                 bottom = 8.dp
-            ), // Add padding to the title
+            ),
             style = TextStyle(
                 fontSize = 33.sp,
                 color = Color(0xFF1D1B20),
@@ -162,10 +159,10 @@ fun CardAlbum(item: AlbumDto) {
                     contentDescription = item.name
                 )
                 Spacer(modifier = Modifier.width(16.dp))
-                // Column for album details
                 Column(
-                    modifier = Modifier.weight(1f)
-                    .fillMaxHeight(),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
                     verticalArrangement = Arrangement.Center,
                 ) {
                     Text(
@@ -202,7 +199,7 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
             .background(
                 color = Color.White
 
-            ), // Add horizontal padding to the search bar
+            ),
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -212,7 +209,7 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
         },
         placeholder = {
             Text(
-                text = "Busca álbumes ahora",
+                text = stringResource(id = R.string.buscar_album),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.Gray
             )

@@ -5,10 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
-import com.example.viniloscompose.viewModel.state.AlbumState
 import com.example.viniloscompose.viewModel.state.MucisianState
 import kotlinx.coroutines.launch
 
@@ -36,6 +34,9 @@ open class MusicianViewModel: ViewModel() {
         }
     }
 
+    fun getFilteredMusicians(query: String): List<MusicianDto> {
+        return response.filter { it.name.contains(query, true) }
+    }
     protected fun setState(musicians: List<MusicianDto>, isLoading: Boolean) {
         state = MucisianState(
             musicians = musicians,
