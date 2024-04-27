@@ -10,10 +10,12 @@ import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.viewModel.state.MucisianState
 import kotlinx.coroutines.launch
 
-open class MusicianViewModel: ViewModel() {
+class MusicianViewModel(
+    private val musicianRepository: MusicianRepository = MusicianRepository.getInstance()
+) : ViewModel() {
 
     var state by mutableStateOf(MucisianState())
-        private  set
+        private set
     var response: List<MusicianDto> by mutableStateOf(listOf())
         private set
 
@@ -22,8 +24,7 @@ open class MusicianViewModel: ViewModel() {
             state = state.copy(
                 isLoading = true
             )
-            val musicianRepositor = MusicianRepository.getInstance()
-            val musicianList = musicianRepositor.getMusicians()
+            val musicianList = musicianRepository.getMusicians()
             response = musicianList
 
             state = state.copy(

@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -32,6 +34,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.viniloscompose.R
 import com.example.viniloscompose.ui.navigation.AppNavigation
 import com.example.viniloscompose.ui.navigation.AppScreens
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.ui.theme.VinilosComposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -40,16 +43,23 @@ import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun InicioScreen(navController:NavController){
-    Scaffold {
-        BodyContent(navController)
+fun InicioScreen( onNavigate: (String) -> Unit ) {
+    Scaffold(
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.INICIO_SCREEN.value
+        }
+    ) {
+        BodyContent(onNavigate)
     }
 }
 
 @Composable
-fun BodyContent(navController:NavController){
-    val formattedDate = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-    Column (
+fun BodyContent( onNavigate: (String) -> Unit) {
+    val formattedDate = SimpleDateFormat(
+        "EEEE dd MMMM yyyy",
+        Locale.getDefault()
+    ).format(Calendar.getInstance().time)
+    Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -89,16 +99,20 @@ fun BodyContent(navController:NavController){
         ) {
             Button(
                 onClick = {
-                navController.navigate(route = AppScreens.AlbumScreen.route) },
+                    onNavigate(AppScreens.AlbumScreen.route)
+                },
                 modifier = Modifier
                     .height(40.dp)
                     .width(209.dp)
+                    .semantics { contentDescription = ContentDescriptions.LOGIN_VISITOR.value }
             ) {
                 Text("Visitante")
             }
             Spacer(modifier = Modifier.height(12.dp))
-            OutlinedButton(onClick = {
-                navController.navigate(route = AppScreens.AlbumScreen.route)},
+            OutlinedButton(
+                onClick = {
+                    onNavigate(AppScreens.CollectorScreen.route)
+                },
                 modifier = Modifier
                     .height(40.dp)
                     .width(209.dp)

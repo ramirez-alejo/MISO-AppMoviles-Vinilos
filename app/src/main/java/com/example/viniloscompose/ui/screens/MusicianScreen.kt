@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -47,15 +50,19 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
+import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.viewModel.MockMusicianViewModel
+import com.example.viniloscompose.ui.navigation.isSelectedBarItem
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -69,6 +76,9 @@ fun MusicianScreen(
     Scaffold(
         bottomBar = {
             BottomNavigation(navController)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.MUSICIAN_SCREEN.value
         }
     ) {
 
@@ -111,13 +121,13 @@ fun BodyMusicianContent(musicians: List<MusicianDto>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(8.dp),
+            .padding(8.dp)
+            .semantics { contentDescription = ContentDescriptions.MUSICIANS_SCREEN_BODY.value },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = musicians) { _, item ->
             CardMusician(item)
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -133,6 +143,8 @@ fun TitleMusician() {
             fontWeight = FontWeight(700),
             letterSpacing = 0.5.sp
         ),
+        modifier = Modifier
+            .semantics { contentDescription = ContentDescriptions.MUSICIANS_SCREEN_TITLE.value },
         lineHeight = 42.sp
     )
 }
@@ -143,6 +155,7 @@ fun CardMusician(item: MusicianDto) {
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
+            .semantics { contentDescription = ContentDescriptions.MUSICIAN_CARD.value }
     ) {
         Row(
             modifier = Modifier
@@ -161,7 +174,10 @@ fun CardMusician(item: MusicianDto) {
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(60.dp)
-                        .clip(CircleShape),
+                        .clip(CircleShape)
+                        .semantics {
+                            contentDescription = ContentDescriptions.MUSICIAN_CARD_IMAGE.value
+                        }
                 )
                 Spacer(modifier = Modifier.size(4.dp))
                 Column {
@@ -190,6 +206,9 @@ fun CardMusician(item: MusicianDto) {
 fun SearchBarMusician(onFilter: (String) -> Unit) {
     var query by remember { mutableStateOf("") }
     SearchBar(
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.MUSICIANS_SCREEN_SEARCHBAR.value
+        },
         query = query,
         onQueryChange = {
                             query = it

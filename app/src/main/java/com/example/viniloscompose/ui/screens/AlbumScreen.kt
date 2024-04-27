@@ -1,13 +1,13 @@
 package com.example.viniloscompose.ui.screens
 
 import android.annotation.SuppressLint
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Card
@@ -33,9 +34,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -53,7 +58,6 @@ import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.viewModel.AlbumViewModel
-import com.example.viniloscompose.viewModel.MockAlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -68,6 +72,9 @@ fun AlbumScreen(
     Scaffold(
         bottomBar = {
             BottomNavigation(navController)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.ALBUM_SCREEN.value
         }
     ) {
 
@@ -106,22 +113,29 @@ fun BodyAlbumContent(albums: List<AlbumDto>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(horizontal = 16.dp)
+            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_BODY.value },
+
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = albums) { _, item ->
             CardAlbum(item)
-            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
 fun TitleAlbum() {
-    val formattedDate = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-    Column (
-        horizontalAlignment = Alignment.CenterHorizontally
+    val formattedDate = SimpleDateFormat(
+        "EEEE dd MMMM yyyy",
+        Locale.getDefault()
+    ).format(Calendar.getInstance().time)
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.ALBUM_SCREEN_TITLE.value
+        }
     ) {
         Text(formattedDate)
         Spacer(modifier = Modifier.height(4.dp))
@@ -146,7 +160,8 @@ fun TitleAlbum() {
 fun CardAlbum(item: AlbumDto) {
         Card(
             modifier = Modifier
-                .height(102.dp),
+                .height(102.dp)
+                .semantics { contentDescription = ContentDescriptions.ALBUM_CARD.value },
         ) {
             Row(
                 modifier = Modifier
@@ -154,7 +169,10 @@ fun CardAlbum(item: AlbumDto) {
                     .padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
                 AsyncImage(
-                    modifier = Modifier.size(86.dp),
+                    modifier = Modifier.size(86.dp)
+                        .semantics {
+                            contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
+                        },
                     model = item.cover,
                     contentDescription = item.name
                 )
@@ -173,7 +191,10 @@ fun CardAlbum(item: AlbumDto) {
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = item.performers.joinToString { it.name },
-                        style = MaterialTheme.typography.titleSmall
+                        style = MaterialTheme.typography.titleSmall,
+                        modifier = Modifier.semantics {
+                            contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                        }
                     )
                 }
 
@@ -198,8 +219,8 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
             .padding(horizontal = 16.dp)
             .background(
                 color = Color.White
-
-            ),
+            )
+            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_SEARCHBAR.value }, // Add horizontal padding to the search bar
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
