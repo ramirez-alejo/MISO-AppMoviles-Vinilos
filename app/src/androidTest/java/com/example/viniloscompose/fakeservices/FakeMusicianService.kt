@@ -4,7 +4,7 @@ import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.service.IMusicianService
 
 class FakeMusicianService(private val amount: Int) : IMusicianService {
-    override suspend fun getMusicians(): List<MusicianDto> {
+    override suspend fun getMusicians(): Result<List<MusicianDto>> {
         var listOfMusicians = emptyList<MusicianDto>()
         for (i in 0 until amount) {
             listOfMusicians = listOfMusicians + MusicianDto(
@@ -13,6 +13,6 @@ class FakeMusicianService(private val amount: Int) : IMusicianService {
                 name = "Musician: ${i}"
             )
         }
-        return listOfMusicians
+        return Result.success(listOfMusicians)
     }
 }
