@@ -70,8 +70,12 @@ fun searchForMusicianCardByText(composeTestRule: ComposeContentTestRule, text: S
         )
 }
 
+fun searchForAllNodesWithDescription(composeTestRule: ComposeContentTestRule, contentDescription: ContentDescriptions): SemanticsNodeInteractionCollection {
+    return composeTestRule.onAllNodesWithContentDescription(contentDescription.value)
+}
+
 fun searchForAllMusicianCards(composeTestRule: ComposeContentTestRule): SemanticsNodeInteractionCollection {
-    return composeTestRule.onAllNodesWithContentDescription(ContentDescriptions.MUSICIAN_CARD.value)
+    return searchForAllNodesWithDescription(composeTestRule, ContentDescriptions.MUSICIAN_CARD)
 }
 
 fun searchForFirstMusicianCard(composeTestRule: ComposeContentTestRule): SemanticsNodeInteraction {
