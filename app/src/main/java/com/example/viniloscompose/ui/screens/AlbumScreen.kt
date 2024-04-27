@@ -27,6 +27,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -107,7 +108,9 @@ fun AlbumScreen(
 @Composable
 fun BodyAlbumContent(albums: List<AlbumDto>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_BODY.value },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -124,7 +127,10 @@ fun TitleAlbum() {
         Locale.getDefault()
     ).format(Calendar.getInstance().time)
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.ALBUM_SCREEN_TITLE.value
+        }
     ) {
         Text(formattedDate)
         Text(
@@ -153,7 +159,8 @@ fun CardAlbum(item: AlbumDto) {
             .padding(horizontal = 8.dp, vertical = 4.dp)
             .fillMaxWidth()
             .height(90.dp)
-            .clip(RoundedCornerShape(8.dp)), // Clip card corners to match Figma design
+            .clip(RoundedCornerShape(8.dp))
+            .semantics { contentDescription = ContentDescriptions.ALBUM_CARD.value }, // Clip card corners to match Figma design
     ) {
         Row(
             modifier = Modifier.fillMaxSize(),
@@ -167,7 +174,10 @@ fun CardAlbum(item: AlbumDto) {
                 AsyncImage(
                     model = item.cover,
                     contentDescription = item.name,
-                    contentScale = ContentScale.Crop
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier.semantics {
+                        contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
+                    }
                 )
             }
 
@@ -187,7 +197,10 @@ fun CardAlbum(item: AlbumDto) {
                 Text(
                     text = item.performers.joinToString { it.name },
                     style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
+                    color = Color.Gray,
+                    modifier = Modifier.semantics {
+                        contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                    }
                 )
             }
         }
@@ -217,8 +230,8 @@ fun SearchBarAlbum(albums: List<AlbumDto>) {
             .padding(horizontal = 16.dp)
             .background(
                 color = Color.White
-
-            ), // Add horizontal padding to the search bar
+            )
+            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_SEARCHBAR.value }, // Add horizontal padding to the search bar
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
