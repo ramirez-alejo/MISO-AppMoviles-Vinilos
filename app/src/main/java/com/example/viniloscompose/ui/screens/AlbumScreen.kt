@@ -57,6 +57,7 @@ import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.viewModel.AlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -72,7 +73,7 @@ fun AlbumScreen(
     val state = albumViewModel.state
     Scaffold(
         bottomBar = {
-            BottomNavigation( onNavigate, isSelected)
+            BottomNavigation(onNavigate, isSelected)
         },
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.ALBUM_SCREEN.value
@@ -118,8 +119,11 @@ fun BodyAlbumContent(albums: List<AlbumDto>) {
 
 @Composable
 fun TitleAlbum() {
-    val formattedDate = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-    Column (
+    val formattedDate = SimpleDateFormat(
+        "EEEE dd MMMM yyyy",
+        Locale.getDefault()
+    ).format(Calendar.getInstance().time)
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(formattedDate)
@@ -242,7 +246,10 @@ fun DefaultAlbumPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
-            AlbumScreen(navController, viewModel())
+            AlbumScreen(
+                onNavigate = { dest -> navController.navigate(dest) },
+                isSelected = isSelectedBarItem(navController), viewModel()
+            )
         }
     }
 }
