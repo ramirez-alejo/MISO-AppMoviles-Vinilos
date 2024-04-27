@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -56,6 +57,7 @@ import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.viewModel.AlbumViewModel
+import com.example.viniloscompose.viewModel.MockAlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -65,6 +67,7 @@ fun AlbumScreen(
     navController: NavController,
     albumViewModel: AlbumViewModel = viewModel()
 ) {
+    var query by remember { mutableStateOf("") }
     val state = albumViewModel.state
     Scaffold(
         bottomBar = {
@@ -82,14 +85,21 @@ fun AlbumScreen(
             }
         } else {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 64.dp, bottom = 84.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 TitleAlbum()
-                SearchBarAlbum(albumViewModel.response)
-                Spacer(modifier = Modifier.height(16.dp))
-                BodyAlbumContent(albumViewModel.response)
+                Column() {
+                    SearchBarAlbum(onFilter = fun(newQuery: String) { query = newQuery })
+                    Spacer(modifier = Modifier.height(16.dp))
+                    val filteredAlbums =
+                        albumViewModel.response.filter { it.name.contains(query, true) }
+                    BodyAlbumContent(filteredAlbums)
+                }
+
             }
         }
     }
@@ -99,12 +109,13 @@ fun AlbumScreen(
 @Composable
 fun BodyAlbumContent(albums: List<AlbumDto>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = albums) { _, item ->
             CardAlbum(item)
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -116,11 +127,10 @@ fun TitleAlbum() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(formattedDate)
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = "Explora Álbumes",
             modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
                 top = 8.dp,
                 bottom = 8.dp
             ), // Add padding to the title
@@ -137,71 +147,56 @@ fun TitleAlbum() {
 
 @Composable
 fun CardAlbum(item: AlbumDto) {
-    Card(
-        modifier = Modifier
-            .padding(horizontal = 8.dp, vertical = 4.dp)
-            .fillMaxWidth()
-            .height(90.dp)
-            .clip(RoundedCornerShape(8.dp)), // Clip card corners to match Figma design
-    ) {
-        Row(
-            modifier = Modifier.fillMaxSize(),
-            verticalAlignment = Alignment.CenterVertically
+        Card(
+            modifier = Modifier
+                .height(102.dp),
         ) {
-            Box(
+            Row(
                 modifier = Modifier
-                    .size(100.dp),
-                contentAlignment = Alignment.Center
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp, horizontal = 16.dp)
             ) {
                 AsyncImage(
+                    modifier = Modifier.size(86.dp),
                     model = item.cover,
-                    contentDescription = item.name,
-                    contentScale = ContentScale.Crop
+                    contentDescription = item.name
                 )
-            }
+                Spacer(modifier = Modifier.width(16.dp))
+                // Column for album details
+                Column(
+                    modifier = Modifier.weight(1f)
+                    .fillMaxHeight(),
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium,
+                        color = Color.Black
+                    )
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = item.performers.joinToString { it.name },
+                        style = MaterialTheme.typography.titleSmall
+                    )
+                }
 
-            Spacer(modifier = Modifier.width(16.dp))
-
-            // Column for album details
-            Column(
-                modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = item.name,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = item.performers.joinToString { it.name },
-                    style = MaterialTheme.typography.labelSmall,
-                    color = Color.Gray
-                )
-            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarAlbum(albums: List<AlbumDto>) {
+fun SearchBarAlbum(onFilter: (String) -> Unit) {
     var query by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
-    val ctx = LocalContext.current
     SearchBar(
         query = query,
-        onQueryChange = { query = it },
-        onSearch = {
-            Toast.makeText(ctx, "buscando", Toast.LENGTH_LONG).show()
-            active = false
-        },
-        active = active,
-        onActiveChange = {
-            active = it
-            if (!active)
-                query = ""
-        },
+        onQueryChange = {
+                            query = it
+                            onFilter(query)
+                        },
+        onSearch = {},
+        active = false,
+        onActiveChange = {},
         modifier = Modifier
             .padding(horizontal = 16.dp)
             .background(
@@ -215,18 +210,21 @@ fun SearchBarAlbum(albums: List<AlbumDto>) {
                 modifier = Modifier.size(20.dp)
             )
         },
+        placeholder = {
+            Text(
+                text = "Busca álbumes ahora",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray
+            )
+        },
         trailingIcon = {
             Icon(
-                painter = painterResource(R.drawable.mic_vector),
+                painter = painterResource(id = R.drawable.mic_vector),
                 contentDescription = null,
-                modifier = Modifier.size(17.dp)
+                modifier = Modifier.size(20.dp)
             )
         }
-    ) {
-        val filteredAlbums =
-            albums.filter { it.name.contains(query, true) }
-        BodyAlbumContent(filteredAlbums)
-    }
+    ){}
 }
 
 @Preview(showBackground = true)
@@ -235,7 +233,8 @@ fun DefaultAlbumPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
-            AlbumScreen(navController, viewModel())
+            val vm = viewModel(MockAlbumViewModel::class.java)
+            AlbumScreen(navController, vm)
         }
     }
 }

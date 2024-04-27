@@ -16,13 +16,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.viniloscompose.R
+import com.example.viniloscompose.ui.navigation.AppNavigation
 import com.example.viniloscompose.ui.navigation.AppScreens
+import com.example.viniloscompose.ui.theme.VinilosComposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -44,54 +54,68 @@ fun BodyContent(navController:NavController){
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(formattedDate)
-        Text(
-            text = "Bienvenido",
-            modifier = Modifier
-                .width(180.dp)
-                .height(43.dp),
-            style = TextStyle(
-                fontSize = 36.sp,
-                color = Color(0xFF1D1B20),
-                fontFamily = FontFamily.Default
-            ),
-            lineHeight = 42.sp
-        )
-        Text(
-            text = "Selecciona la categoría a la que perteneces",
-            modifier = Modifier
-                .width(232.dp)
-                .height(16.dp),
-            overflow = TextOverflow.Visible,
-            style = TextStyle(
-                fontSize = 12.sp,
-                color = Color(0xFF1D1B20),
-                fontFamily = FontFamily.Default
-            ),
-            lineHeight = 16.sp,
-            letterSpacing = 2.sp
-        )
-        Spacer(modifier = Modifier.height(25.dp))
-        Button(onClick = {
-            navController.navigate(route = AppScreens.AlbumScreen.route) },
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .height(40.dp)
-                .width(200.dp)
-                .padding(end = 8.dp)
-        ) {
-            Text("Visitante")
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+        ){
+            Text(formattedDate)
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = "Bienvenido",
+                modifier = Modifier
+                    .width(180.dp)
+                    .height(43.dp),
+                style = TextStyle(
+                    fontSize = 36.sp,
+                    color = Color(0xFF1D1B20),
+                    fontFamily = FontFamily.Default,
+                    fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                ),
+                lineHeight = 42.sp
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+            Text(
+                text = stringResource(id = R.string.seleccione_la_categoria),
+                modifier = Modifier
+                    .height(16.dp),
+                style = TextStyle(
+                    fontSize = 12.sp,
+                ),
+                lineHeight = 16.sp
+            )
         }
-        Spacer(modifier = Modifier.height(10.dp))
-        OutlinedButton(onClick = {
-            navController.navigate(route = AppScreens.AlbumScreen.route)},
-            modifier = Modifier
-                .padding(horizontal = 8.dp)
-                .height(40.dp)
-                .width(200.dp)
-                .padding(end = 8.dp)
+        Spacer(modifier = Modifier.height(20.dp))
+        Column(
         ) {
-            Text("Coleccionista")
+            Button(
+                onClick = {
+                navController.navigate(route = AppScreens.AlbumScreen.route) },
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(209.dp)
+            ) {
+                Text("Visitante")
+            }
+            Spacer(modifier = Modifier.height(12.dp))
+            OutlinedButton(onClick = {
+                navController.navigate(route = AppScreens.AlbumScreen.route)},
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(209.dp)
+            ) {
+                Text("Coleccionista")
+            }
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DefaultInicioPreview() {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
+        composable(AppScreens.AlbumScreen.route) {
+            InicioScreen(navController)
         }
     }
 }

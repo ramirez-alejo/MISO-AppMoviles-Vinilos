@@ -6,5 +6,4 @@ import com.example.viniloscompose.model.dto.MusicianDto
 data class AlbumState (
     val albums:List<AlbumDto> = emptyList(),
     val isLoading: Boolean  = false
-
 )

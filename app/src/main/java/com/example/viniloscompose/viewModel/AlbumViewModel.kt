@@ -10,7 +10,7 @@ import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.viewModel.state.AlbumState
 import kotlinx.coroutines.launch
 
-class AlbumViewModel : ViewModel() {
+open class AlbumViewModel : ViewModel() {
 
     var state by mutableStateOf(AlbumState())
         private  set
@@ -32,6 +32,14 @@ class AlbumViewModel : ViewModel() {
 
             )
         }
+    }
+
+    protected fun setState(albums: List<AlbumDto>, isLoading: Boolean) {
+        state = AlbumState(
+            albums = albums,
+            isLoading = isLoading
+        )
+        response = albums
     }
 
 }

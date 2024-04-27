@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +19,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Search
@@ -24,6 +27,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
@@ -41,6 +45,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,6 +60,7 @@ import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.viewModel.MockMusicianViewModel
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -63,6 +69,7 @@ fun MusicianScreen(
     navController: NavController,
     musicianViewModel: MusicianViewModel = viewModel()
 ) {
+    var query by remember { mutableStateOf("") }
     val state = musicianViewModel.state
     Scaffold(
         bottomBar = {
@@ -80,13 +87,24 @@ fun MusicianScreen(
             }
         } else {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 64.dp, bottom = 84.dp),
                 verticalArrangement = Arrangement.Top,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                SearchBarMusician(musicianViewModel.response)
-                TitleMusician()
-                BodyMusicianContent(musicianViewModel.response)
+                SearchBarMusician(onFilter = fun(newQuery: String) { query = newQuery })
+                Spacer(modifier = Modifier.height(16.dp))
+                Column (
+                    modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+                ){
+                    TitleMusician()
+                    Spacer(modifier = Modifier.height(12.dp))
+                    val filteredMusicians =
+                        musicianViewModel.response.filter { it.name.contains(query, true) }
+
+                    BodyMusicianContent(filteredMusicians)
+                }
             }
         }
     }
@@ -96,12 +114,13 @@ fun MusicianScreen(
 @Composable
 fun BodyMusicianContent(musicians: List<MusicianDto>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize().padding(8.dp),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = musicians) { _, item ->
             CardMusician(item)
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
@@ -110,14 +129,12 @@ fun BodyMusicianContent(musicians: List<MusicianDto>) {
 fun TitleMusician() {
     Text(
         text = "Artistas del momento",
-        modifier = Modifier
-            .width(180.dp)
-            .height(43.dp),
         style = TextStyle(
             fontSize = 18.sp,
             color = Color(0xFF1D1B20),
             fontFamily = FontFamily.Default,
-            textAlign = TextAlign.Left,
+            fontWeight = FontWeight(700),
+            letterSpacing = 0.5.sp
         ),
         lineHeight = 42.sp
     )
@@ -127,59 +144,43 @@ fun TitleMusician() {
 fun CardMusician(item: MusicianDto) {
     Card(
         modifier = Modifier
-            .padding(8.dp)
             .fillMaxSize()
             .background(Color.White)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp, horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Box(
-                modifier = Modifier
-                    .weight(0.2f)
-                    .height(80.dp),
-                contentAlignment = Alignment.Center
-            )
-            {
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 AsyncImage(
                     model = item.image,
                     contentDescription = item.name,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .size(60.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
                 )
-            }
-
-            Box(
-                modifier = Modifier
-                    .weight(0.6f)
-                    .height(80.dp),
-                contentAlignment = Alignment.CenterStart
-            )
-            {
+                Spacer(modifier = Modifier.size(4.dp))
                 Column {
-                    Text(text = item.name)
-                    Text(text = "Artista")
+                    Text(
+                        text = item.name,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    Text(text = "Artista", style = MaterialTheme.typography.titleSmall)
                 }
             }
-
-            Box(
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = null,
                 modifier = Modifier
-                    .weight(0.2f)
-                    .height(80.dp),
-                contentAlignment = Alignment.Center
+                    .size(20.dp)
+                    .clickable { }
             )
-            {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clickable {  }
-                )
-            }
+
         }
     }
 
@@ -187,24 +188,17 @@ fun CardMusician(item: MusicianDto) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SearchBarMusician(musicians: List<MusicianDto>) {
+fun SearchBarMusician(onFilter: (String) -> Unit) {
     var query by remember { mutableStateOf("") }
-    var active by remember { mutableStateOf(false) }
-    val ctx = LocalContext.current
     SearchBar(
         query = query,
-        onQueryChange = { query = it },
-        onSearch = {
-            Toast.makeText(ctx, "buscando", Toast.LENGTH_LONG).show()
-            active = false
-
-        },
-        active = active,
-        onActiveChange = {
-            active = it
-            if (!active)
-                query = ""
-        },
+        onQueryChange = {
+                            query = it
+                            onFilter(query)
+                        },
+        onSearch = {},
+        active = false,
+        onActiveChange = {},
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -212,19 +206,23 @@ fun SearchBarMusician(musicians: List<MusicianDto>) {
                 modifier = Modifier.size(20.dp)
             )
         },
+        placeholder = {
+            Text(
+                text = "Busca tus artistas favoritos",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Gray
+            )
+        },
         trailingIcon = {
             Icon(
-                painter = painterResource(R.drawable.mic_vector),
+                painter = painterResource(id = R.drawable.mic_vector),
                 contentDescription = null,
-                modifier = Modifier.size(17.dp)
+                modifier = Modifier.size(20.dp)
             )
-
         }
 
     ) {
-        val filteredMusicians =
-            musicians.filter { it.name.contains(query, true) }
-        BodyMusicianContent(filteredMusicians)
+
     }
 }
 
@@ -234,7 +232,7 @@ fun DefaulMusiciatPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.MusicianScreen.route) {
         composable(AppScreens.MusicianScreen.route) {
-            MusicianScreen(navController, viewModel())
+            MusicianScreen(navController, MockMusicianViewModel())
         }
     }
 }

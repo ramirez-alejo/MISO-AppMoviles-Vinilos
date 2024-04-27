@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">VinilosCompose</string>
+    <string name="seleccione_la_categoria">Selecciona la categoría a la que perteneces</string>
 </resources>

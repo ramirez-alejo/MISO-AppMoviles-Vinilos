@@ -5,12 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
+import com.example.viniloscompose.viewModel.state.AlbumState
 import com.example.viniloscompose.viewModel.state.MucisianState
 import kotlinx.coroutines.launch
 
-class MusicianViewModel: ViewModel() {
+open class MusicianViewModel: ViewModel() {
 
     var state by mutableStateOf(MucisianState())
         private  set
@@ -32,6 +34,14 @@ class MusicianViewModel: ViewModel() {
 
             )
         }
+    }
+
+    protected fun setState(musicians: List<MusicianDto>, isLoading: Boolean) {
+        state = MucisianState(
+            musicians = musicians,
+            isLoading = isLoading
+        )
+        response = musicians
     }
 
 }
