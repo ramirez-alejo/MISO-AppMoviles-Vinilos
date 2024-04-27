@@ -25,6 +25,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.example.viniloscompose.MainActivity
+import com.example.viniloscompose.fakeservices.FakeMusicianService
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.model.service.IMusicianService
@@ -122,17 +123,3 @@ class MusicianScreenTest {
     }
 }
 
-class FakeMusicianService(private val amount: Int) : IMusicianService {
-    override suspend fun getMusicians(): List<MusicianDto> {
-        var listOfMusicians = emptyList<MusicianDto>()
-        for (i in 0 until amount) {
-            listOfMusicians = listOfMusicians + MusicianDto(
-                id = i,
-                image = "${i}.com",
-                name = "Musician: ${i}"
-            )
-        }
-        return listOfMusicians
-    }
-
-}
