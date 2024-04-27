@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,6 +40,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
@@ -47,26 +50,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.Navigation.findNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
+import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.ui.navigation.isSelectedBarItem
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MusicianScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit,
+    isSelected: (String) -> Boolean,
     musicianViewModel: MusicianViewModel = viewModel()
 ) {
     val state = musicianViewModel.state
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController)
+            BottomNavigation(onNavigate, isSelected)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.MUSICIAN_SCREEN.value
         }
     ) {
 
@@ -96,7 +107,9 @@ fun MusicianScreen(
 @Composable
 fun BodyMusicianContent(musicians: List<MusicianDto>) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .semantics { contentDescription = ContentDescriptions.MUSICIANS_SCREEN_BODY.value },
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -112,7 +125,8 @@ fun TitleMusician() {
         text = "Artistas del momento",
         modifier = Modifier
             .width(180.dp)
-            .height(43.dp),
+            .height(43.dp)
+            .semantics { contentDescription = ContentDescriptions.MUSICIANS_SCREEN_TITLE.value },
         style = TextStyle(
             fontSize = 18.sp,
             color = Color(0xFF1D1B20),
@@ -130,6 +144,7 @@ fun CardMusician(item: MusicianDto) {
             .padding(8.dp)
             .fillMaxSize()
             .background(Color.White)
+            .semantics { contentDescription = ContentDescriptions.MUSICIAN_CARD.value }
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -149,6 +164,9 @@ fun CardMusician(item: MusicianDto) {
                     modifier = Modifier
                         .size(60.dp)
                         .clip(CircleShape)
+                        .semantics {
+                            contentDescription = ContentDescriptions.MUSICIAN_CARD_IMAGE.value
+                        }
                 )
             }
 
@@ -177,7 +195,7 @@ fun CardMusician(item: MusicianDto) {
                     contentDescription = null,
                     modifier = Modifier
                         .size(20.dp)
-                        .clickable {  }
+                        .clickable { }
                 )
             }
         }
@@ -192,6 +210,9 @@ fun SearchBarMusician(musicians: List<MusicianDto>) {
     var active by remember { mutableStateOf(false) }
     val ctx = LocalContext.current
     SearchBar(
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.MUSICIANS_SCREEN_SEARCHBAR.value
+        },
         query = query,
         onQueryChange = { query = it },
         onSearch = {
@@ -234,7 +255,11 @@ fun DefaulMusiciatPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.MusicianScreen.route) {
         composable(AppScreens.MusicianScreen.route) {
-            MusicianScreen(navController, viewModel())
+            MusicianScreen(
+                onNavigate = { dest -> navController.navigate(dest) },
+                isSelected = isSelectedBarItem(navController),
+                viewModel()
+            )
         }
     }
 }

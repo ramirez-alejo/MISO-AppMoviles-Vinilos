@@ -36,6 +36,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -55,20 +57,26 @@ import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
+import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.viewModel.AlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.*
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AlbumScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit,
+    isSelected: (String) -> Boolean,
     albumViewModel: AlbumViewModel = viewModel()
 ) {
     val state = albumViewModel.state
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController)
+            BottomNavigation(onNavigate, isSelected)
+        },
+        modifier = Modifier.semantics {
+            contentDescription = ContentDescriptions.ALBUM_SCREEN.value
         }
     ) {
 
@@ -111,8 +119,11 @@ fun BodyAlbumContent(albums: List<AlbumDto>) {
 
 @Composable
 fun TitleAlbum() {
-    val formattedDate = SimpleDateFormat("EEEE dd MMMM yyyy", Locale.getDefault()).format(Calendar.getInstance().time)
-    Column (
+    val formattedDate = SimpleDateFormat(
+        "EEEE dd MMMM yyyy",
+        Locale.getDefault()
+    ).format(Calendar.getInstance().time)
+    Column(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(formattedDate)
@@ -235,7 +246,10 @@ fun DefaultAlbumPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
-            AlbumScreen(navController, viewModel())
+            AlbumScreen(
+                onNavigate = { dest -> navController.navigate(dest) },
+                isSelected = isSelectedBarItem(navController), viewModel()
+            )
         }
     }
 }
