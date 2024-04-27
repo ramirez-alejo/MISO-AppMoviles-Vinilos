@@ -26,10 +26,10 @@ import com.example.viniloscompose.ui.shared.ContentDescriptions
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun CollectorScreen(navController: NavController) {
+fun CollectorScreen( onNavigate: (String) -> Unit, isSelected: (String) -> Boolean) {
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController)
+            BottomNavigation(onNavigate, isSelected)
         },
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.COLLECTOR_SCREEN.value

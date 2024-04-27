@@ -1,11 +1,14 @@
-package com.example.viniloscompose
+package com.example.viniloscompose.activityTests
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.viniloscompose.MainActivity
 import com.example.viniloscompose.pageobjects.*
+import com.example.viniloscompose.ui.shared.ContentDescriptions
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,7 +33,7 @@ class InicioScreenTest {
             composeTestRule.onNodeWithText("Bienvenido").isDisplayed()
         }
         clickVisitor(composeTestRule)
-        composeTestRule.onNodeWithText("Bienvenido Albumes").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_SCREEN.value).assertIsDisplayed()
     }
 
     @Test

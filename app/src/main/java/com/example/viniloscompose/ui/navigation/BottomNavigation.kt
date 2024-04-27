@@ -20,7 +20,7 @@ import com.example.viniloscompose.ui.shared.BottomNavItem
 import com.example.viniloscompose.ui.shared.ContentDescriptions
 
 @Composable
-fun BottomNavigation(navController: NavController) {
+fun BottomNavigation( onNavigate: (String) -> Unit, isSelected: (String) -> Boolean) {
 
     val items = listOf(
         BottomNavItem.Albums,
@@ -36,7 +36,8 @@ fun BottomNavigation(navController: NavController) {
         items.forEach { item ->
             AddItem(
                 screen = item,
-                navController = navController
+                onNavigate,
+                isSelected
             )
         }
     }
@@ -45,7 +46,8 @@ fun BottomNavigation(navController: NavController) {
 @Composable
 fun RowScope.AddItem(
     screen: BottomNavItem,
-    navController: NavController
+    onNavigate: (String) -> Unit,
+    isSelected: (String) -> Boolean
 ) {
     NavigationBarItem(
         modifier = Modifier.semantics { contentDescription = screen.title },
@@ -64,21 +66,16 @@ fun RowScope.AddItem(
         },
 
         // Display if the icon it is select or not
-        selected = isSelectedBarItem(navController, screen.rute),
+        selected = isSelected(screen.rute), //currentDestination?.hierarchy?.any { it.route == screen.route } == true,
 
         // Always show the label bellow the icon or not
         alwaysShowLabel = true,
 
         // Click listener for the icon
-        onClick = { navController.navigate(route = screen.rute) },
+        onClick = { onNavigate(screen.rute) },
 
         // Control all the colors of the icon
         colors = NavigationBarItemDefaults.colors()
     )
 }
 
-@Composable
-fun isSelectedBarItem(navController: NavController, rute: String): Boolean {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    return navBackStackEntry?.destination?.route == rute
-}

@@ -33,18 +33,18 @@ import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun InicioScreen(navController: NavController) {
+fun InicioScreen( onNavigate: (String) -> Unit ) {
     Scaffold(
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.INICIO_SCREEN.value
         }
     ) {
-        BodyContent(navController)
+        BodyContent(onNavigate)
     }
 }
 
 @Composable
-fun BodyContent(navController: NavController) {
+fun BodyContent( onNavigate: (String) -> Unit) {
     val formattedDate = SimpleDateFormat(
         "EEEE dd MMMM yyyy",
         Locale.getDefault()
@@ -84,26 +84,28 @@ fun BodyContent(navController: NavController) {
         Spacer(modifier = Modifier.height(25.dp))
         Button(
             onClick = {
-                navController.navigate(route = AppScreens.AlbumScreen.route)
+                onNavigate(AppScreens.AlbumScreen.route)
             },
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .height(40.dp)
                 .width(200.dp)
                 .padding(end = 8.dp)
+                .semantics { contentDescription = ContentDescriptions.LOGIN_VISITOR.value }
         ) {
             Text("Visitante")
         }
         Spacer(modifier = Modifier.height(10.dp))
         OutlinedButton(
             onClick = {
-                navController.navigate(route = AppScreens.CollectorScreen.route)
+                onNavigate(AppScreens.CollectorScreen.route)
             },
             modifier = Modifier
                 .padding(horizontal = 8.dp)
                 .height(40.dp)
                 .width(200.dp)
                 .padding(end = 8.dp)
+                .semantics { contentDescription = ContentDescriptions.LOGIN_COLLECTOR.value }
         ) {
             Text("Coleccionista")
         }

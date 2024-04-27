@@ -22,5 +22,10 @@ enum class ContentDescriptions(val value: String) {
     ALBUM_SCREEN("AlbumScreen"),
     COLLECTOR_SCREEN("CollectorScreen"),
     INICIO_SCREEN("InicioScreen"),
-    MUSICIAN_SCREEN("MusicianScreen")
+    MUSICIAN_SCREEN("MusicianScreen"),
+    MUSICIANS_SCREEN_SEARCHBAR("MusicianSearchBar"),
+    MUSICIANS_SCREEN_TITLE("MusicianTitle"),
+    MUSICIANS_SCREEN_BODY("MusicianScreenBody"),
+    MUSICIAN_CARD("MusicianCard"),
+    MUSICIAN_CARD_IMAGE("MusicianCardImage")
 }

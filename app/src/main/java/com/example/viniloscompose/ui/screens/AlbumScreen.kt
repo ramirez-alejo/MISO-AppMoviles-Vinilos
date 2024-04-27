@@ -25,10 +25,10 @@ import com.example.viniloscompose.ui.shared.ContentDescriptions
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun AlbumScreen(navController: NavController) {
+fun AlbumScreen( onNavigate: (String) -> Unit, isSelected: (String) -> Boolean) {
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController)
+            BottomNavigation( onNavigate, isSelected)
         },
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.ALBUM_SCREEN.value

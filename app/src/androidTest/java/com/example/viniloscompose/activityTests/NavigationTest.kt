@@ -1,10 +1,11 @@
-package com.example.viniloscompose
+package com.example.viniloscompose.activityTests
 
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.example.viniloscompose.MainActivity
 import com.example.viniloscompose.ui.shared.BottomNavigationSection
 import com.example.viniloscompose.ui.shared.LoginType
 import com.example.viniloscompose.pageobjects.clickSectionNavigationBar
