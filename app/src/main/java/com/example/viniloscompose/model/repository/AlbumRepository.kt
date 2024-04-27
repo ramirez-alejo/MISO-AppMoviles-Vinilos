@@ -1,18 +1,17 @@
 package com.example.viniloscompose.model.repository
 
 import com.example.viniloscompose.model.dto.AlbumDto
-import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.service.IAlbumService
-import com.example.viniloscompose.model.service.IMusicianService
+import com.example.viniloscompose.model.service.VinilosService
 
 class AlbumRepository  (private val service: IAlbumService){
     suspend fun getAlbums(): List<AlbumDto> {
-        return service.getAlbums()
+        return service.getAlbums().getOrThrow()
     }
 
     companion object {
         fun getInstance(): AlbumRepository {
-            val service = IAlbumService.getInstace()
+            val service = VinilosService()
             return AlbumRepository(service)
         }
     }
