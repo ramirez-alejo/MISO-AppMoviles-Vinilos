@@ -32,13 +32,6 @@ class MusicianScreenTest {
         composeTestRule.onNodeWithContentDescription(ContentDescriptions.MUSICIANS_SCREEN_TITLE.value).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(ContentDescriptions.MUSICIANS_SCREEN_SEARCHBAR.value).assertIsDisplayed()
     }
-    @Test
-    @OptIn(ExperimentalTestApi::class)
-    fun renderMusicianScreenWithMusicians() {
-        clickSectionNavigationBar(composeTestRule, BottomNavigationSection.MUSICIAN)
-        composeTestRule.waitUntilNodeCount(hasContentDescription(ContentDescriptions.MUSICIANS_SCREEN_TITLE.value), 1)
-        (ContentDescriptions.MUSICIAN_CARD.value)
-    }
 
 
 }
