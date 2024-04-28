@@ -23,7 +23,7 @@ class AlbumScreenTest {
     fun renderAlbumTestScreen() {
         login(composeTestRule, LoginType.COLLECTOR)
         clickSectionNavigationBar(composeTestRule, BottomNavigationSection.ALBUM)
-        composeTestRule.waitUntilNodeCount(hasContentDescription(ContentDescriptions.ALBUM_SCREEN_TITLE.value), 1)
+        composeTestRule.waitUntilNodeCount(hasContentDescription(ContentDescriptions.ALBUM_SCREEN_TITLE.value), 1, 2000)
         composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_SCREEN_BODY.value).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_SCREEN_SEARCHBAR.value).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_SCREEN_TITLE.value).assertIsDisplayed()

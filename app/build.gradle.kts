@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.viniloscompose"
-        minSdk = 27
+        minSdk = 21
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
