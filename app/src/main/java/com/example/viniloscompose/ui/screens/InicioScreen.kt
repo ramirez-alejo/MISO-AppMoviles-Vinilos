@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedButton
@@ -21,21 +20,15 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.viniloscompose.R
-import com.example.viniloscompose.ui.navigation.AppNavigation
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.shared.ContentDescriptions
-import com.example.viniloscompose.ui.theme.VinilosComposeTheme
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -71,7 +64,7 @@ fun BodyContent( onNavigate: (String) -> Unit) {
             Text(formattedDate)
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = "Bienvenido",
+                text = stringResource(id = R.string.bienvenido),
                 modifier = Modifier
                     .width(180.dp)
                     .height(43.dp),
@@ -106,7 +99,7 @@ fun BodyContent( onNavigate: (String) -> Unit) {
                     .width(209.dp)
                     .semantics { contentDescription = ContentDescriptions.LOGIN_VISITOR.value }
             ) {
-                Text("Visitante")
+                Text(stringResource(id = R.string.visitante))
             }
             Spacer(modifier = Modifier.height(12.dp))
             OutlinedButton(
@@ -116,8 +109,9 @@ fun BodyContent( onNavigate: (String) -> Unit) {
                 modifier = Modifier
                     .height(40.dp)
                     .width(209.dp)
+                    .semantics { contentDescription = ContentDescriptions.LOGIN_COLLECTOR.value }
             ) {
-                Text("Coleccionista")
+                Text(stringResource(id = R.string.coleccionista))
             }
         }
     }
@@ -129,7 +123,9 @@ fun DefaultInicioPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
-            InicioScreen(navController)
+            InicioScreen(
+                onNavigate = { dest -> navController.navigate(dest) },
+            )
         }
     }
 }

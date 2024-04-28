@@ -1,7 +1,6 @@
 package com.example.viniloscompose.ui.screens
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -27,7 +26,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -49,8 +47,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,9 +54,9 @@ import coil.compose.AsyncImage
 import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
+import com.example.viniloscompose.model.service.mocks.MusicianServiceMock
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
-import com.example.viniloscompose.viewModel.MockMusicianViewModel
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.viewModel.MusicianViewModel
@@ -68,14 +64,15 @@ import com.example.viniloscompose.viewModel.MusicianViewModel
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MusicianScreen(
-    navController: NavController,
+    onNavigate: (String) -> Unit,
+    isSelected: (String) -> Boolean,
     musicianViewModel: MusicianViewModel = viewModel()
 ) {
     var query by remember { mutableStateOf("") }
     val state = musicianViewModel.state
     Scaffold(
         bottomBar = {
-            BottomNavigation(navController)
+            BottomNavigation(onNavigate, isSelected)
         },
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.MUSICIAN_SCREEN.value
@@ -154,7 +151,7 @@ fun CardMusician(item: MusicianDto) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .padding(vertical = 4.dp)
             .semantics { contentDescription = ContentDescriptions.MUSICIAN_CARD.value }
     ) {
         Row(
@@ -250,7 +247,11 @@ fun DefaulMusiciatPreview() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = AppScreens.MusicianScreen.route) {
         composable(AppScreens.MusicianScreen.route) {
-            MusicianScreen(navController, MockMusicianViewModel())
+            MusicianScreen(
+                onNavigate = { dest -> navController.navigate(dest) },
+                isSelected = isSelectedBarItem(navController),
+                musicianViewModel = MusicianViewModel(MusicianRepository(MusicianServiceMock()))
+            )
         }
     }
 }

@@ -6,4 +6,7 @@
     <string name="artistas_del_momento">Artistas del momento</string>
     <string name="artista">Artista</string>
     <string name="buscar_artista">Busca tus artistas favoritos</string>
+    <string name="visitante">Visitante</string>
+    <string name="coleccionista">Coleccionista</string>
+    <string name="bienvenido">Bienvenido</string>
 </resources>

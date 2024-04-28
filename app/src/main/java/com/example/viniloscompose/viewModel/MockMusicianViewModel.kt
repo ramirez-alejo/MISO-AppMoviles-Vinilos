@@ -1,7 +1,6 @@
 package com.example.viniloscompose.viewModel
 
-import com.example.viniloscompose.model.dto.MusicianDto
-
+/*
 class MockMusicianViewModel: MusicianViewModel() {
 
         init {
@@ -22,3 +21,4 @@ class MockMusicianViewModel: MusicianViewModel() {
             )
         }
 }
+*/
