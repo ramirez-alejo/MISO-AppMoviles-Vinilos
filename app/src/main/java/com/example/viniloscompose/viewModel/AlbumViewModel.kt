@@ -33,4 +33,17 @@ class AlbumViewModel(private val albumRepository: AlbumRepository = AlbumReposit
         }
     }
 
+
+    fun getFilteredAlbums(query: String): List<AlbumDto> {
+        return response.filter { it.name.contains(query, true) }
+    }
+
+    protected fun setState(albums: List<AlbumDto>, isLoading: Boolean) {
+        state = AlbumState(
+            albums = albums,
+            isLoading = isLoading
+        )
+        response = albums
+    }
+
 }
