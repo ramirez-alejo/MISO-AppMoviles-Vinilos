@@ -10,6 +10,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.viniloscompose.ui.navigation.AppNavigation
+import com.example.viniloscompose.ui.screens.InicioScreen
 import com.example.viniloscompose.ui.theme.VinilosComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,25 +24,19 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Grupo de Vinilos")
+                    AppNavigation()
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     VinilosComposeTheme {
-        Greeting("Android")
+        AppNavigation()
     }
 }
