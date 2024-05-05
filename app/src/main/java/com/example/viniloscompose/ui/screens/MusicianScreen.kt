@@ -27,7 +27,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,9 +47,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.Navigation.findNavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -58,10 +54,13 @@ import coil.compose.AsyncImage
 import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
+import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.ui.shared.ContentDescriptions
+import com.example.viniloscompose.utils.cache.FixedCacheManager
+import com.example.viniloscompose.utils.network.FixedNetworkValidator
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -69,7 +68,7 @@ import com.example.viniloscompose.viewModel.MusicianViewModel
 fun MusicianScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    musicianViewModel: MusicianViewModel = viewModel()
+    musicianViewModel: MusicianViewModel
 ) {
     val state = musicianViewModel.state
     Scaffold(
@@ -253,12 +252,14 @@ fun SearchBarMusician(musicians: List<MusicianDto>) {
 @Composable
 fun DefaulMusiciatPreview() {
     val navController = rememberNavController()
+    val cacheManager = FixedCacheManager()
+    val networkValidator = FixedNetworkValidator(true)
     NavHost(navController, startDestination = AppScreens.MusicianScreen.route) {
         composable(AppScreens.MusicianScreen.route) {
             MusicianScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                viewModel()
+                MusicianViewModel(MusicianRepository(cacheManager, networkValidator, VinilosService()))
             )
         }
     }

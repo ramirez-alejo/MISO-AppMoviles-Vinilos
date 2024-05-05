@@ -10,8 +10,7 @@ import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.viewModel.state.AlbumState
 import kotlinx.coroutines.launch
 
-class AlbumViewModel(private val albumRepository: AlbumRepository = AlbumRepository.getInstance()) : ViewModel() {
-
+class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel() {
     var state by mutableStateOf(AlbumState())
         private  set
     var response: List<AlbumDto> by mutableStateOf(listOf())
@@ -22,15 +21,26 @@ class AlbumViewModel(private val albumRepository: AlbumRepository = AlbumReposit
             state = state.copy(
                 isLoading = true
             )
-            val albumList = albumRepository.getAlbums()
-            response = albumList
+            try {
+                var albumList = albumRepository.getAlbums()
+                if (albumList.isEmpty()) {
+                    albumRepository.refreshData()
+                    albumList = albumRepository.getAlbums()
+                }
+                response = albumList
 
-            state = state.copy(
-                isLoading = false,
-                albums = response
-
-            )
+                state = state.copy(
+                    isLoading = false,
+                    albums = response,
+                    error = null
+                )
+            } catch (e: Exception) {
+                response = emptyList()
+                state = state.copy(
+                    isLoading = false,
+                    error = e.message
+                )
+            }
         }
     }
-
 }

@@ -37,39 +37,42 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.AlbumDto
+import com.example.viniloscompose.model.repository.AlbumRepository
+import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
+import com.example.viniloscompose.ui.shared.ContentDescriptions
+import com.example.viniloscompose.utils.cache.FixedCacheManager
+import com.example.viniloscompose.utils.network.FixedNetworkValidator
 import com.example.viniloscompose.viewModel.AlbumViewModel
 import java.text.SimpleDateFormat
-import java.util.*
-import com.example.viniloscompose.ui.shared.ContentDescriptions
+import java.util.Calendar
+import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AlbumScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    albumViewModel: AlbumViewModel = viewModel()
+    albumViewModel: AlbumViewModel
 ) {
     val state = albumViewModel.state
     Scaffold(
@@ -89,7 +92,23 @@ fun AlbumScreen(
             {
                 CircularProgressIndicator()
             }
-        } else {
+        } else if (state.error != null) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Lo sentimos, se ha presentado el siguiente error y no podemos atender tu solicitud en este momento: ${state.error}",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = contentColorFor(Color.White),
+                        fontFamily = FontFamily.Default,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        }
+        else {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Top,
@@ -257,11 +276,20 @@ fun SearchBarAlbum(albums: List<AlbumDto>) {
 @Composable
 fun DefaultAlbumPreview() {
     val navController = rememberNavController()
+    val cacheManager = FixedCacheManager()
+    val networkValidator = FixedNetworkValidator(true)
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
             AlbumScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
-                isSelected = isSelectedBarItem(navController), viewModel()
+                isSelected = isSelectedBarItem(navController),
+                AlbumViewModel(
+                    AlbumRepository(
+                        cacheManager,
+                        networkValidator,
+                        VinilosService()
+                    )
+                )
             )
         }
     }

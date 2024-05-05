@@ -5,8 +5,8 @@ import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.serviceAdapter.VinilosServiceAdapter
 
 class VinilosService (
-    private val vinilosServiceAdapter: VinilosServiceAdapter = VinilosServiceAdapter()
 ): IAlbumService, IMusicianService {
+    private val vinilosServiceAdapter: VinilosServiceAdapter = VinilosServiceAdapter()
     override suspend fun getMusicians(): Result<List<MusicianDto>> = vinilosServiceAdapter.getMusicians()
     override suspend fun getAlbums(): Result<List<AlbumDto>> = vinilosServiceAdapter.getAlbums()
 }
