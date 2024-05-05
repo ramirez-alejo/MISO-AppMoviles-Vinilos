@@ -42,4 +42,16 @@ class MusicianViewModel(private val musicianRepository: MusicianRepository) : Vi
             }
         }
     }
+
+    fun getFilteredMusicians(query: String): List<MusicianDto> {
+        return response.filter { it.name.contains(query, true) }
+    }
+    protected fun setState(musicians: List<MusicianDto>, isLoading: Boolean) {
+        state = MucisianState(
+            musicians = musicians,
+            isLoading = isLoading
+        )
+        response = musicians
+    }
+
 }
