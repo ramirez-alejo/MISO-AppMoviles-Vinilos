@@ -26,6 +26,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +45,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -57,6 +57,8 @@ import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.ui.shared.ContentDescriptions
+import com.example.viniloscompose.utils.cache.FixedCacheManager
+import com.example.viniloscompose.utils.network.FixedNetworkValidator
 import com.example.viniloscompose.viewModel.AlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -67,7 +69,7 @@ import java.util.Locale
 fun AlbumScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    albumViewModel: AlbumViewModel = viewModel()
+    albumViewModel: AlbumViewModel
 ) {
     var query by remember { mutableStateOf("") }
     val state = albumViewModel.state
@@ -88,7 +90,23 @@ fun AlbumScreen(
             {
                 CircularProgressIndicator()
             }
-        } else {
+        } else if (state.error != null) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Lo sentimos, se ha presentado el siguiente error y no podemos atender tu solicitud en este momento: ${state.error}",
+                    style = TextStyle(
+                        fontSize = 20.sp,
+                        color = contentColorFor(Color.White),
+                        fontFamily = FontFamily.Default,
+                        textAlign = TextAlign.Center
+                    )
+                )
+            }
+        }
+        else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -252,12 +270,20 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
 @Composable
 fun DefaultAlbumPreview() {
     val navController = rememberNavController()
+    val cacheManager = FixedCacheManager()
+    val networkValidator = FixedNetworkValidator(true)
     NavHost(navController, startDestination = AppScreens.AlbumScreen.route) {
         composable(AppScreens.AlbumScreen.route) {
             AlbumScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                albumViewModel = AlbumViewModel(AlbumRepository(AlbumServiceMock()))
+                AlbumViewModel(
+                    AlbumRepository(
+                        cacheManager,
+                        networkValidator,
+                        AlbumServiceMock()
+                    )
+                )
             )
         }
     }
