@@ -19,16 +19,16 @@ class CollectorRepository(
     }
 
     suspend fun refreshData(): List<CollectorDto>{
-        var albums = getCollectors()
-        return if(albums.isNullOrEmpty()){
+        var collectors = getCollectors()
+        return if(collectors.isNullOrEmpty()){
             if(!networkValidator.isNetworkAvailable()){
                 emptyList()
             } else {
-                albums = service.getCollectors().getOrThrow()
-                setCollectors(albums)
-                albums
+                collectors = service.getCollectors().getOrThrow()
+                setCollectors(collectors)
+                collectors
             }
-        } else albums
+        } else collectors
     }
 
     private fun setCollectors(collectors: List<CollectorDto>){
