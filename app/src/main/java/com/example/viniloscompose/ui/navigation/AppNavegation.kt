@@ -11,6 +11,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.viniloscompose.model.repository.AlbumRepository
+import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.screens.AlbumScreen
@@ -20,6 +21,7 @@ import com.example.viniloscompose.ui.screens.MusicianScreen
 import com.example.viniloscompose.utils.cache.CacheManager
 import com.example.viniloscompose.utils.network.NetworkValidator
 import com.example.viniloscompose.viewModel.AlbumViewModel
+import com.example.viniloscompose.viewModel.CollectorViewModel
 import com.example.viniloscompose.viewModel.MusicianViewModel
 
 
@@ -31,8 +33,10 @@ fun AppNavigation() {
     val service = remember { VinilosService() }
     val albumRepository = remember { AlbumRepository(cacheManager, networkValidator, service) }
     val musicianRepository = remember { MusicianRepository(cacheManager, networkValidator, service) }
+    val collectorRepository = remember { CollectorRepository(cacheManager, networkValidator, service) }
     val albumViewModel = remember { AlbumViewModel(albumRepository) }
     val musicianViewModel = remember { MusicianViewModel(musicianRepository) }
+    val collectorViewModel = remember { CollectorViewModel(collectorRepository) }
 
     val navController = rememberNavController()
     NavHost(
@@ -56,7 +60,11 @@ fun AppNavigation() {
             )
         }
         composable(route = AppScreens.CollectorScreen.route) {
-            CollectorScreen(onNavigate = {destination -> navController.navigate(destination)}, isSelected = isSelectedBarItem(navController))
+            CollectorScreen(
+                onNavigate = {destination -> navController.navigate(destination)},
+                isSelected = isSelectedBarItem(navController),
+                collectorViewModel = collectorViewModel
+            )
         }
 
     }
