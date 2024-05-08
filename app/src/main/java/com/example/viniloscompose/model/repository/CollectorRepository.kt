@@ -22,6 +22,7 @@ class CollectorRepository(
         var collectors = getCollectors()
         return if(collectors.isNullOrEmpty()){
             if(!networkValidator.isNetworkAvailable()){
+                println("DOESNT HAVE NETWORK AVAILABLE")
                 emptyList()
             } else {
                 collectors = service.getCollectors().getOrThrow()

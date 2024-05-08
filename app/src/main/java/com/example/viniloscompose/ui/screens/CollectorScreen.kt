@@ -52,6 +52,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -75,8 +76,9 @@ import com.example.viniloscompose.viewModel.CollectorViewModel
 fun CollectorScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    collectorViewModel: CollectorViewModel
+    collectorRepository: CollectorRepository
 ) {
+    val collectorViewModel = remember { CollectorViewModel(collectorRepository) }
     var query by remember { mutableStateOf("") }
     val state = collectorViewModel.state
     Scaffold(
@@ -246,7 +248,8 @@ fun CardCollector(item: CollectorDto) {
                 Column {
                     Text(
                         text = item.name,
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.semantics { contentDescription = ContentDescriptions.COLLECTOR_CARD_NAME.value }
                     )
                     Text(
                         text = stringResource(id = R.string.coleccionista),
@@ -278,12 +281,10 @@ fun DefaultCollectorScreenPreview() {
             CollectorScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                CollectorViewModel(
-                    CollectorRepository(
-                        cacheManager,
-                        networkValidator,
-                        CollectorServiceMock()
-                    )
+                CollectorRepository(
+                    cacheManager,
+                    networkValidator,
+                    CollectorServiceMock()
                 )
             )
         }

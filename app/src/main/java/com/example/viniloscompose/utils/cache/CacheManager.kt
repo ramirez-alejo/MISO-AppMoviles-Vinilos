@@ -17,14 +17,6 @@ class CacheManager(context: Context) : ICacheManager{
         const val COLLECTORS_SPREFS = "collectors"
 
         fun getPrefs(context: Context, name: String): SharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-        private var instance: CacheManager? = null
-        fun getInstance(context: Context) =
-            instance ?: synchronized(this) {
-                instance ?: CacheManager(context).also {
-                    instance = it
-                }
-            }
     }
 
     private var albums: List<AlbumDto> = emptyList()
@@ -114,6 +106,7 @@ class FixedCacheManager(
         return when(collection){
             CacheManager.ALBUMS_SPREFS -> albums.isNotEmpty()
             CacheManager.MUSICIANS_SPREFS -> musicians.isNotEmpty()
+            CacheManager.COLLECTORS_SPREFS -> collectors.isNotEmpty()
             else -> false
         }
     }

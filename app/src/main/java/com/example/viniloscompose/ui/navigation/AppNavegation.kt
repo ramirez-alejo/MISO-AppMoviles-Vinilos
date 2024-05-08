@@ -20,9 +20,6 @@ import com.example.viniloscompose.ui.screens.InicioScreen
 import com.example.viniloscompose.ui.screens.MusicianScreen
 import com.example.viniloscompose.utils.cache.CacheManager
 import com.example.viniloscompose.utils.network.NetworkValidator
-import com.example.viniloscompose.viewModel.AlbumViewModel
-import com.example.viniloscompose.viewModel.CollectorViewModel
-import com.example.viniloscompose.viewModel.MusicianViewModel
 
 
 @Composable
@@ -34,9 +31,6 @@ fun AppNavigation() {
     val albumRepository = remember { AlbumRepository(cacheManager, networkValidator, service) }
     val musicianRepository = remember { MusicianRepository(cacheManager, networkValidator, service) }
     val collectorRepository = remember { CollectorRepository(cacheManager, networkValidator, service) }
-    val albumViewModel = remember { AlbumViewModel(albumRepository) }
-    val musicianViewModel = remember { MusicianViewModel(musicianRepository) }
-    val collectorViewModel = remember { CollectorViewModel(collectorRepository) }
 
     val navController = rememberNavController()
     NavHost(
@@ -49,21 +43,21 @@ fun AppNavigation() {
             MusicianScreen(
                 onNavigate = {destination -> navController.navigate(destination)},
                 isSelected = isSelectedBarItem(navController),
-                musicianViewModel = musicianViewModel
+                musicianRepository = musicianRepository
             )
         }
         composable(route = AppScreens.AlbumScreen.route) {
             AlbumScreen(
                 onNavigate = {destination -> navController.navigate(destination)},
                 isSelected = isSelectedBarItem(navController),
-                albumViewModel = albumViewModel
+                albumRepository = albumRepository
             )
         }
         composable(route = AppScreens.CollectorScreen.route) {
             CollectorScreen(
                 onNavigate = {destination -> navController.navigate(destination)},
                 isSelected = isSelectedBarItem(navController),
-                collectorViewModel = collectorViewModel
+                collectorRepository = collectorRepository
             )
         }
 

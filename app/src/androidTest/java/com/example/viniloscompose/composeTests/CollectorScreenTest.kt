@@ -2,7 +2,6 @@ package com.example.viniloscompose.composeTests
 
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertAll
-import androidx.compose.ui.test.assertAny
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
@@ -10,51 +9,49 @@ import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onAllNodesWithContentDescription
-import androidx.compose.ui.test.onChildren
 import androidx.compose.ui.test.onNodeWithContentDescription
-import androidx.compose.ui.test.onRoot
-import androidx.compose.ui.test.printToLog
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import com.example.viniloscompose.fakeservices.FakeMusicianService
-import com.example.viniloscompose.model.repository.MusicianRepository
-import com.example.viniloscompose.pageobjects.searchForAllMusicianCards
-import com.example.viniloscompose.pageobjects.searchForFirstMusicianCard
-import com.example.viniloscompose.pageobjects.searchForLastMusicianCard
+import com.example.viniloscompose.fakeservices.FakeAlbumService
+import com.example.viniloscompose.fakeservices.FakeCollectorsService
+import com.example.viniloscompose.model.repository.AlbumRepository
+import com.example.viniloscompose.model.repository.CollectorRepository
+import com.example.viniloscompose.pageobjects.searchForAllNodesWithDescription
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
-import com.example.viniloscompose.ui.screens.MusicianScreen
+import com.example.viniloscompose.ui.screens.AlbumScreen
+import com.example.viniloscompose.ui.screens.CollectorScreen
 import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.ui.theme.VinilosComposeTheme
 import com.example.viniloscompose.utils.cache.FixedCacheManager
 import com.example.viniloscompose.utils.network.FixedNetworkValidator
-import com.example.viniloscompose.viewModel.MusicianViewModel
+import com.example.viniloscompose.viewModel.AlbumViewModel
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class MusicianScreenTest {
+class CollectorScreenTest {
     @get:Rule
     val composeTestRule = createComposeRule()
     lateinit var navController: TestNavHostController
 
-    lateinit var repository: MusicianRepository
-    var amountOfMusicians: Int = 3
+    lateinit var repository: CollectorRepository
+    var amountOfCollectors: Int = 5
 
     private fun setupContent(amount: Int) {
-        amountOfMusicians = amount
+        amountOfCollectors = amount
         composeTestRule.setContent {
             navController = TestNavHostController(LocalContext.current)
             navController.navigatorProvider.addNavigator(ComposeNavigator())
             val isSelected = isSelectedBarItem(navController = navController)
-            val fakeMusicianService = FakeMusicianService(amount)
             val cacheManager = FixedCacheManager()
             val networkValidator = FixedNetworkValidator(true)
-            repository = MusicianRepository(cacheManager, networkValidator, fakeMusicianService)
+            val fakeCollectorsService = FakeCollectorsService(amount)
+            repository = CollectorRepository(cacheManager, networkValidator, fakeCollectorsService)
             VinilosComposeTheme {
-                MusicianScreen(
+                CollectorScreen(
                     onNavigate = { dest -> navController.navigate(dest) },
                     isSelected = { dest -> isSelected(dest) },
-                    musicianRepository = repository
+                    collectorRepository = repository
                 )
             }
         }
@@ -62,50 +59,41 @@ class MusicianScreenTest {
 
     @Before
     fun setup() {
-        setupContent(3)
+        setupContent(amountOfCollectors)
     }
 
     @Test
-    fun renderMusicianScreenWith3Musicians() {
+    fun renderAlbumScreenWith3Albums() {
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithContentDescription(ContentDescriptions.MUSICIAN_SCREEN.value)
+                composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_SCREEN.value)
                 .isDisplayed()
         }
-        composeTestRule.onAllNodesWithContentDescription(ContentDescriptions.MUSICIAN_CARD.value)
-            .assertCountEquals(amountOfMusicians)
+        composeTestRule.onAllNodesWithContentDescription(ContentDescriptions.COLLECTOR_CARD.value)
+            .assertCountEquals(amountOfCollectors)
     }
 
     @Test
-    fun musicianScreenArtistsAreOrdered() {
+    fun albumScreenAlbumCardsAreRenderedCorrectly() {
         composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithContentDescription(ContentDescriptions.MUSICIAN_SCREEN.value)
+            composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_SCREEN.value)
                 .isDisplayed()
         }
-        composeTestRule.onRoot().printToLog("debug printing")
-        searchForFirstMusicianCard(composeTestRule).onChildren().assertAny(hasText("Musician: 0"))
-        searchForLastMusicianCard(composeTestRule).onChildren()
-            .assertAny(hasText("Musician: ${amountOfMusicians - 1}"))
-    }
-
-    @Test
-    fun musicianScreenMusicianCardsAreRenderedCorrectly() {
-        composeTestRule.waitUntil(5000) {
-            composeTestRule.onNodeWithContentDescription(ContentDescriptions.MUSICIAN_SCREEN.value)
-                .isDisplayed()
-        }
-        searchForAllMusicianCards(composeTestRule).assertAll(
+        searchForAllNodesWithDescription(composeTestRule, ContentDescriptions.COLLECTOR_CARD).assertAll(
             hasAnyChild(
                 hasText(
-                    text = "Musician",
+                    text = "Collector",
                     substring = true,
                     ignoreCase = true
                 )
             ).and(
                 hasAnyChild(
-                    hasContentDescription(ContentDescriptions.MUSICIAN_CARD_IMAGE.value)
+                    hasContentDescription(ContentDescriptions.COLLECTOR_CARD_IMAGE.value)
+                )
+            ).and(
+                hasAnyChild(
+                    hasContentDescription(ContentDescriptions.COLLECTOR_CARD_NAME.value)
                 )
             )
         )
     }
 }
-

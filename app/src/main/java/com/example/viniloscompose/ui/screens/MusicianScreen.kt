@@ -69,8 +69,9 @@ import com.example.viniloscompose.viewModel.MusicianViewModel
 fun MusicianScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    musicianViewModel: MusicianViewModel
+    musicianRepository: MusicianRepository
 ) {
+    val musicianViewModel = remember { MusicianViewModel(musicianRepository) }
     var query by remember { mutableStateOf("") }
     val state = musicianViewModel.state
     Scaffold(
@@ -255,7 +256,7 @@ fun DefaulMusiciatPreview() {
             MusicianScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                MusicianViewModel(MusicianRepository(cacheManager, networkValidator, MusicianServiceMock()))
+                MusicianRepository(cacheManager, networkValidator, MusicianServiceMock())
             )
         }
     }

@@ -32,6 +32,7 @@ enum class ContentDescriptions(val value: String) {
     COLLECTOR_SCREEN_BODY("CollectorScreenBody"),
     COLLECTOR_CARD("CollectorCard"),
     COLLECTOR_CARD_IMAGE("CollectorCardImage"),
+    COLLECTOR_CARD_NAME("CollectorCardName"),
     INICIO_SCREEN("InicioScreen"),
     MUSICIAN_SCREEN("MusicianScreen"),
     MUSICIANS_SCREEN_SEARCHBAR("MusicianSearchBar"),
