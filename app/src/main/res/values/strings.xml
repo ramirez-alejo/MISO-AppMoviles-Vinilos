@@ -8,5 +8,7 @@
     <string name="buscar_artista">Busca tus artistas favoritos</string>
     <string name="visitante">Visitante</string>
     <string name="coleccionista">Coleccionista</string>
+    <string name="buscar_coleccionista">Busca un coleccionista</string>
+    <string name="coleccionistas_destacados">Collecionistas mas destacados</string>
     <string name="bienvenido">Bienvenido</string>
 </resources>

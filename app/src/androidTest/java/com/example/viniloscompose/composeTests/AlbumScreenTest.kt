@@ -44,12 +44,11 @@ class AlbumScreenTest {
             val networkValidator = FixedNetworkValidator(true)
             val fakeAlbumService = FakeAlbumService(amount)
             repository = AlbumRepository(cacheManager, networkValidator, fakeAlbumService)
-            val fakeViewModel = AlbumViewModel(repository)
             VinilosComposeTheme {
                 AlbumScreen(
                     onNavigate = { dest -> navController.navigate(dest) },
                     isSelected = { dest -> isSelected(dest) },
-                    fakeViewModel
+                    albumRepository = repository
                 )
             }
         }

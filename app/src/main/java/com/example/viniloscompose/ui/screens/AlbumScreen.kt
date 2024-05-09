@@ -69,8 +69,9 @@ import java.util.Locale
 fun AlbumScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    albumViewModel: AlbumViewModel
+    albumRepository: AlbumRepository
 ) {
+    val albumViewModel = remember { AlbumViewModel(albumRepository) }
     var query by remember { mutableStateOf("") }
     val state = albumViewModel.state
     Scaffold(
@@ -105,8 +106,7 @@ fun AlbumScreen(
                     )
                 )
             }
-        }
-        else {
+        } else {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -178,46 +178,47 @@ fun TitleAlbum() {
 
 @Composable
 fun CardAlbum(item: AlbumDto) {
-        Card(
+    Card(
+        modifier = Modifier
+            .height(102.dp)
+            .padding(vertical = 4.dp)
+            .semantics { contentDescription = ContentDescriptions.ALBUM_CARD.value },
+    ) {
+        Row(
             modifier = Modifier
-                .height(102.dp)
-                .padding(vertical = 4.dp)
-                .semantics { contentDescription = ContentDescriptions.ALBUM_CARD.value },
+                .fillMaxWidth()
+                .padding(vertical = 8.dp, horizontal = 16.dp)
         ) {
-            Row(
+            AsyncImage(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 16.dp)
+                    .size(86.dp)
+                    .semantics {
+                        contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
+                    },
+                model = item.cover,
+                contentDescription = item.name
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight(),
+                verticalArrangement = Arrangement.Center,
             ) {
-                AsyncImage(
-                    modifier = Modifier.size(86.dp)
-                        .semantics {
-                            contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
-                        },
-                    model = item.cover,
-                    contentDescription = item.name
+                Text(
+                    text = item.name,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = Color.Black
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Column(
-                    modifier = Modifier
-                        .weight(1f)
-                        .fillMaxHeight(),
-                    verticalArrangement = Arrangement.Center,
-                ) {
-                    Text(
-                        text = item.name,
-                        style = MaterialTheme.typography.titleMedium,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = item.performers.joinToString { it.name },
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.semantics {
-                            contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
-                        }
-                    )
-                }
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = item.performers.joinToString { it.name },
+                    style = MaterialTheme.typography.titleSmall,
+                    modifier = Modifier.semantics {
+                        contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                    }
+                )
+            }
 
         }
     }
@@ -230,18 +231,17 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
     SearchBar(
         query = query,
         onQueryChange = {
-                            query = it
-                            onFilter(query)
-                        },
+            query = it
+            onFilter(query)
+        },
         onSearch = {},
         active = false,
         onActiveChange = {},
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .background(
-                color = Color.White
-            )
-            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_SEARCHBAR.value }, // Add horizontal padding to the search bar
+            .semantics {
+                contentDescription = ContentDescriptions.ALBUM_SCREEN_SEARCHBAR.value
+            }, // Add horizontal padding to the search bar
         leadingIcon = {
             Icon(
                 imageVector = Icons.Default.Search,
@@ -263,7 +263,7 @@ fun SearchBarAlbum(onFilter: (String) -> Unit) {
                 modifier = Modifier.size(20.dp)
             )
         }
-    ){}
+    ) {}
 }
 
 @Preview(showBackground = true)
@@ -277,12 +277,10 @@ fun DefaultAlbumPreview() {
             AlbumScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                AlbumViewModel(
-                    AlbumRepository(
-                        cacheManager,
-                        networkValidator,
-                        AlbumServiceMock()
-                    )
+                AlbumRepository(
+                    cacheManager,
+                    networkValidator,
+                    AlbumServiceMock()
                 )
             )
         }

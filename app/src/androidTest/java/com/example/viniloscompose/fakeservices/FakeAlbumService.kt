@@ -1,14 +1,15 @@
 package com.example.viniloscompose.fakeservices
 
 import com.example.viniloscompose.model.dto.AlbumDto
+import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.dto.PerformerDto
 import com.example.viniloscompose.model.service.IAlbumService
 
 class FakeAlbumService(private val amount: Int): IAlbumService {
     override suspend fun getAlbums(): Result<List<AlbumDto>> {
-        var listOfMusicians = emptyList<AlbumDto>()
+        var listOfAlbums = emptyList<AlbumDto>()
         for (i in 0 until amount) {
-            listOfMusicians = listOfMusicians + AlbumDto(
+            listOfAlbums = listOfAlbums + AlbumDto(
                 id = i,
                 name = "Album: $i",
                 cover = "Cover: $i",
@@ -25,7 +26,7 @@ class FakeAlbumService(private val amount: Int): IAlbumService {
                 releaseDate = "Release date: $i"
             )
         }
-        return Result.success(listOfMusicians)
+        return Result.success(listOfAlbums)
     }
 
 }

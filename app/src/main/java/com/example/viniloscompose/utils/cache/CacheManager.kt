@@ -3,6 +3,7 @@ package com.example.viniloscompose.utils.cache
 import android.content.Context
 import android.content.SharedPreferences
 import com.example.viniloscompose.model.dto.AlbumDto
+import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.dto.MusicianDto
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -13,16 +14,9 @@ class CacheManager(context: Context) : ICacheManager{
     companion object {
         const val ALBUMS_SPREFS = "albums"
         const val MUSICIANS_SPREFS = "musicians"
+        const val COLLECTORS_SPREFS = "collectors"
 
         fun getPrefs(context: Context, name: String): SharedPreferences = context.getSharedPreferences(name, Context.MODE_PRIVATE)
-
-        private var instance: CacheManager? = null
-        fun getInstance(context: Context) =
-            instance ?: synchronized(this) {
-                instance ?: CacheManager(context).also {
-                    instance = it
-                }
-            }
     }
 
     private var albums: List<AlbumDto> = emptyList()
@@ -33,9 +27,23 @@ class CacheManager(context: Context) : ICacheManager{
             return Json.decodeFromString(albums)
         } else emptyList()
     }
+
     override fun setAlbums(albums: List<AlbumDto>) {
         this.albums = albums
         getPrefs(context, ALBUMS_SPREFS).edit().putString(ALBUMS_SPREFS, Json.encodeToString(albums)).apply()
+    }
+
+    private var collectors: List<CollectorDto> = emptyList()
+    override fun getCollectors() : List<CollectorDto> {
+        if(collectors.isNotEmpty()) return collectors
+        val collectors = getPrefs(context, COLLECTORS_SPREFS).getString(COLLECTORS_SPREFS, null)
+        return if(collectors != null){
+            return Json.decodeFromString(collectors)
+        } else emptyList()
+    }
+    override fun setCollectors(collectors: List<CollectorDto>) {
+        this.collectors = collectors
+        getPrefs(context, COLLECTORS_SPREFS).edit().putString(COLLECTORS_SPREFS, Json.encodeToString(collectors)).apply()
     }
 
     private var musicians: List<MusicianDto> = emptyList()
@@ -58,6 +66,8 @@ class CacheManager(context: Context) : ICacheManager{
 interface ICacheManager {
     fun getAlbums(): List<AlbumDto>
     fun setAlbums(albums: List<AlbumDto>)
+    fun getCollectors(): List<CollectorDto>
+    fun setCollectors(collectors: List<CollectorDto>)
     fun getMusicians(): List<MusicianDto>
     fun setMusicians(musicians: List<MusicianDto>)
     fun hasCollection(collection: String): Boolean
@@ -65,7 +75,8 @@ interface ICacheManager {
 
 class FixedCacheManager(
     private var albums: List<AlbumDto> = emptyList(),
-    private var musicians: List<MusicianDto> = emptyList()
+    private var musicians: List<MusicianDto> = emptyList(),
+    private var collectors: List<CollectorDto> = emptyList()
 
 ) : ICacheManager {
     override fun getAlbums(): List<AlbumDto> {
@@ -74,6 +85,13 @@ class FixedCacheManager(
 
     override fun setAlbums(albums: List<AlbumDto>) {
         this.albums = albums
+    }
+    override fun getCollectors(): List<CollectorDto> {
+        return collectors
+    }
+
+    override fun setCollectors(collectors: List<CollectorDto>) {
+        this.collectors = collectors
     }
 
     override fun getMusicians(): List<MusicianDto> {
@@ -88,6 +106,7 @@ class FixedCacheManager(
         return when(collection){
             CacheManager.ALBUMS_SPREFS -> albums.isNotEmpty()
             CacheManager.MUSICIANS_SPREFS -> musicians.isNotEmpty()
+            CacheManager.COLLECTORS_SPREFS -> collectors.isNotEmpty()
             else -> false
         }
     }
