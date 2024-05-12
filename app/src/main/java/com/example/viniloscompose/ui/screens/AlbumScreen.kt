@@ -26,6 +26,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
@@ -68,6 +69,7 @@ import com.example.viniloscompose.viewModel.AlbumViewModel
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
+import java.util.logging.Logger
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -77,7 +79,7 @@ fun AlbumScreen(
     albumRepository: AlbumRepository,
     viewModel: AlbumViewModel? = null
 ) {
-    val albumViewModel = viewModel ?: AlbumViewModel(albumRepository)
+    val albumViewModel = viewModel ?: remember {AlbumViewModel(albumRepository) }
     var query by remember { mutableStateOf("") }
     val state = albumViewModel.state
     Scaffold(
@@ -120,7 +122,7 @@ fun AlbumScreen(
 
         if (state.selectedAlbum != null) {
             val album = state.selectedAlbum
-            AlbumDetailScreen(album)
+            AlbumDetailScreen(album, albumViewModel)
             return@Scaffold
         }
 
@@ -144,7 +146,7 @@ fun AlbumScreen(
 }
 
 @Composable
-fun AlbumDetailScreen(album: AlbumDto) {
+fun AlbumDetailScreen(album: AlbumDto, albumViewModel: AlbumViewModel) {
     //Lets declare 4 colors and use them randomly in the gradient
     val colors = listOf(Color.Blue, Color.Red, Color.Green, Color.Yellow)
     val currentColor = colors.random()
@@ -157,18 +159,24 @@ fun AlbumDetailScreen(album: AlbumDto) {
                 .background(Brush.verticalGradient(listOf(currentColor, Color.White)))
         ) {
 
-            Icon(
-                imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = null,
+            IconButton(
+                onClick = {
+                    albumViewModel.selectAlbum(null)
+                },
                 modifier = Modifier
                     .padding(16.dp)
                     .size(24.dp)
                     .align(Alignment.TopStart)
                     .semantics {
                         contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
-                    },
-                tint = Color.White
-            )
+                    }
+            ){
+                Icon(
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = null,
+                    tint = Color.White
+                )
+            }
 
             AsyncImage(
                 modifier = Modifier
@@ -210,14 +218,12 @@ fun AlbumDetailScreen(album: AlbumDto) {
                         contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
                     }
             ) {
-                album.performers.forEach { performer ->
-                    Text(
-                        text = performer.name,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Black
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
+
+                Text(
+                    text = album.performers.joinToString { it.name },
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Black
+                )
             }
             Row(
                 modifier = Modifier
@@ -268,7 +274,7 @@ fun AlbumDetailScreen(album: AlbumDto) {
                     .padding(vertical = 8.dp)
 
             ) {
-                album .tracks.forEach { track ->
+                album.tracks?.forEach { track ->
                     Row(
                         modifier = Modifier
                             .semantics {
@@ -380,6 +386,8 @@ fun CardAlbum(item: AlbumDto, albumViewModel: AlbumViewModel) {
     Card(onClick = {
         //set the selected album
         albumViewModel.selectAlbum(item)
+        //log the event
+        Logger.getLogger("AlbumScreen").info("Album selected: ${item.name}")
     },
         modifier = Modifier
             .height(102.dp)

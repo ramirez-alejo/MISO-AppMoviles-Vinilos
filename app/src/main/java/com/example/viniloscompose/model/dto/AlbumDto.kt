@@ -11,7 +11,7 @@ data class AlbumDto (
     var genre: String,
     var recordLabel: String,
     var performers: List<PerformerDto>,
-    var tracks: List<TracksDto>
+    var tracks: List<TracksDto>? = null
 )
 
 @Serializable
