@@ -9,11 +9,12 @@ import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.viewModel.state.AlbumState
 import kotlinx.coroutines.launch
+import java.util.logging.Logger
 
 class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel() {
     var state by mutableStateOf(AlbumState())
         private  set
-    var response: List<AlbumDto> by mutableStateOf(listOf())
+    private var response: List<AlbumDto> by mutableStateOf(listOf())
         private set
 
     init {
@@ -47,6 +48,14 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
 
     fun getFilteredAlbums(query: String): List<AlbumDto> {
         return response.filter { it.name.contains(query, true) }
+    }
+
+    fun selectAlbum(album: AlbumDto?) {
+        Logger.getLogger("AlbumViewModel").info("Selected album: $album")
+        state = state.copy(
+            selectedAlbum = album
+        )
+        Logger.getLogger("AlbumViewModel").info("Selected album: ${state.selectedAlbum}")
     }
 
 }

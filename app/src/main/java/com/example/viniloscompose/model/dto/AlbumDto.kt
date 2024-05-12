@@ -10,7 +10,8 @@ data class AlbumDto (
     var description: String,
     var genre: String,
     var recordLabel: String,
-    var performers: List<PerformerDto>
+    var performers: List<PerformerDto>,
+    var tracks: List<TracksDto>? = null
 )
 
 @Serializable
@@ -20,4 +21,11 @@ data class PerformerDto(
     val image: String,
     val description: String?,
     val birthDate: String?,
+)
+
+@Serializable
+data class TracksDto(
+    val id: Int,
+    val name: String,
+    val duration: String
 )

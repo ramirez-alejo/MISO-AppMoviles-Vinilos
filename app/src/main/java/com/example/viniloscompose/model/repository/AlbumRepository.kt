@@ -20,7 +20,7 @@ class AlbumRepository  (
 
     suspend fun refreshData(): List<AlbumDto>{
         var albums = getAlbums()
-        return if(albums.isNullOrEmpty()){
+        return if(albums.isEmpty()){
             if(!networkValidator.isNetworkAvailable()){
                 emptyList()
             } else {

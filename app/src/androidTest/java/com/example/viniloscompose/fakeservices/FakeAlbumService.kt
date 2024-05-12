@@ -1,8 +1,8 @@
 package com.example.viniloscompose.fakeservices
 
 import com.example.viniloscompose.model.dto.AlbumDto
-import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.dto.PerformerDto
+import com.example.viniloscompose.model.dto.TracksDto
 import com.example.viniloscompose.model.service.IAlbumService
 
 class FakeAlbumService(private val amount: Int): IAlbumService {
@@ -23,7 +23,19 @@ class FakeAlbumService(private val amount: Int): IAlbumService {
                     birthDate = "$i"
                 )),
                 recordLabel = "Record label: $i",
-                releaseDate = "Release date: $i"
+                releaseDate = "Release date: $i",
+                tracks = listOf(
+                    TracksDto(
+                        id = i,
+                        name = "Track: $i",
+                        duration = "00:00"
+                    ),
+                    TracksDto(
+                        id = i+1,
+                        name = "Track: $i",
+                        duration = "00:02"
+                    )
+                )
             )
         }
         return Result.success(listOfAlbums)
