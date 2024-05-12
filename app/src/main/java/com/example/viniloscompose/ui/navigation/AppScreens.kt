@@ -8,6 +8,8 @@ sealed class AppScreens (val route: String) {
 
     data object  AlbumScreen: AppScreens("albums_screen")
 
+    data object  AlbumDetailScreen: AppScreens("albums_detail_screen")
+
     data object  CollectorScreen: AppScreens("collectors_screen")
 
 

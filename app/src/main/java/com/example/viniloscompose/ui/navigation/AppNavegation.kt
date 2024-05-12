@@ -16,6 +16,7 @@ import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.model.service.VinilosService
+import com.example.viniloscompose.ui.screens.AlbumDetailScreen
 import com.example.viniloscompose.ui.screens.AlbumScreen
 import com.example.viniloscompose.ui.screens.CollectorScreen
 import com.example.viniloscompose.ui.screens.InicioScreen
@@ -57,7 +58,8 @@ fun AppNavigation() {
             AlbumScreen(
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = isSelectedBarItem(navController),
-                albumRepository = albumRepository
+                albumRepository = albumRepository,
+                onCardClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route+"/$id")}
             )
         }
         composable(route = AppScreens.CollectorScreen.route) {
@@ -79,6 +81,24 @@ fun AppNavigation() {
                 musicianRepository = musicianRepository,
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = {rute -> AppScreens.MusicianScreen.route == rute},
+                popBackStackAction = { navController.popBackStack() },
+                onAlbumClick =  { id -> navController.navigate(AppScreens.AlbumDetailScreen.route+"/$id")}
+
+            )
+
+        }
+        composable(route = AppScreens.AlbumDetailScreen.route + "/{idAlbum}",
+            arguments = listOf(
+                navArgument(name = "idAlbum") {
+                    type = NavType.IntType
+                }
+            )
+        ) {idMusician ->
+            AlbumDetailScreen(
+                albumId = idMusician.arguments?.getInt("idAlbum"),
+                albumRepository = albumRepository,
+                onNavigate = { destination -> navController.navigate(destination) },
+                isSelected = {rute -> AppScreens.AlbumScreen.route == rute},
                 popBackStackAction = { navController.popBackStack() }
 
             )

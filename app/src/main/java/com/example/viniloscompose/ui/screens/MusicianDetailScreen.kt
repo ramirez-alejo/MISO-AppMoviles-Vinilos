@@ -52,12 +52,10 @@ import com.example.viniloscompose.model.service.mocks.MusicianServiceMock
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.ui.shared.ContentDescriptions
+import com.example.viniloscompose.ui.shared.convertirFormatoFecha
 import com.example.viniloscompose.utils.cache.FixedCacheManager
 import com.example.viniloscompose.utils.network.FixedNetworkValidator
 import com.example.viniloscompose.viewModel.MusicianViewModel
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -67,7 +65,8 @@ fun MusicianDetailScreen(
     musicianRepository: MusicianRepository,
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    popBackStackAction: () -> Unit
+    popBackStackAction: () -> Unit,
+    onAlbumClick: (Int) -> Unit
 ) {
     val musicianViewModel = remember { MusicianViewModel(musicianRepository) }
     val item = musicianViewModel.getMusician(musicianId!!)
@@ -81,7 +80,7 @@ fun MusicianDetailScreen(
             contentDescription = ContentDescriptions.MUSICIAN_SCREEN.value
         }
     ) {
-        BodyMusicianDetailContent(item)
+        BodyMusicianDetailContent(item, onAlbumClick)
     }
 
 }
@@ -112,12 +111,12 @@ private fun TopBar(popBackStackAction: () -> Unit) {
 }
 
 @Composable
-private fun BodyMusicianDetailContent(item: MusicianDto) {
+private fun BodyMusicianDetailContent(item: MusicianDto, onAlbumClick: (Int) -> Unit) {
     Column {
         Spacer(modifier = Modifier.size(40.dp))
         MusicianInformationContent(item)
         Spacer(modifier = Modifier.height(16.dp))
-        MusicianAlbumsContent(item.albums)
+        MusicianAlbumsContent(item.albums, onAlbumClick)
     }
 }
 
@@ -160,7 +159,10 @@ private fun MusicianInformationContent(item: MusicianDto) {
 }
 
 @Composable
-private fun MusicianAlbumsContent(albums: List<MusicianAlbumDetailDto>) {
+private fun MusicianAlbumsContent(
+    albums: List<MusicianAlbumDetailDto>,
+    onAlbumClick: (Int) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -168,12 +170,12 @@ private fun MusicianAlbumsContent(albums: List<MusicianAlbumDetailDto>) {
     ) {
         TitleMusicianAlbums()
         Spacer(modifier = Modifier.height(12.dp))
-        MusicianAlbumsList(albums)
+        MusicianAlbumsList(albums, onAlbumClick)
     }
 }
 
 @Composable
-private fun MusicianAlbumsList(albums: List<MusicianAlbumDetailDto>) {
+private fun MusicianAlbumsList(albums: List<MusicianAlbumDetailDto>, onAlbumClick: (Int) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -184,7 +186,7 @@ private fun MusicianAlbumsList(albums: List<MusicianAlbumDetailDto>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = albums) { _, item ->
-            CardAlbumDetail(item)
+            CardAlbumDetail(item, onAlbumClick)
         }
     }
 }
@@ -210,8 +212,9 @@ private fun TitleMusicianAlbums() {
 
 
 @Composable
-private fun CardAlbumDetail(item: MusicianAlbumDetailDto) {
+private fun CardAlbumDetail(item: MusicianAlbumDetailDto, onAlbumClick: (Int) -> Unit) {
     Card(
+        onClick = { onAlbumClick(item.id) },
         modifier = Modifier
             .height(102.dp)
             .padding(vertical = 4.dp)
@@ -267,8 +270,8 @@ fun DefaultMusicianDetailPreview() {
                 ),
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = { rute -> AppScreens.MusicianScreen.route == rute },
-                popBackStackAction = { navController.popBackStack() }
-
+                popBackStackAction = { navController.popBackStack() },
+                onAlbumClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route + "/$id") }
             )
 
         }
@@ -277,14 +280,3 @@ fun DefaultMusicianDetailPreview() {
 }
 
 
-fun convertirFormatoFecha(fechaCadena: String): String {
-    // Formato de la cadena de fecha de entrada
-    val formatoEntrada = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-
-    // Formato de la cadena de fecha de salida
-    val formatoSalida = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-
-    // Parsear la cadena de fecha y formatearla
-    val fecha = formatoEntrada.parse(fechaCadena)
-    return formatoSalida.format(fecha as Date)
-}

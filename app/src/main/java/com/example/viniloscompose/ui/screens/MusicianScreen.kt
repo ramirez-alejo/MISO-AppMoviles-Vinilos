@@ -155,6 +155,7 @@ fun TitleMusician() {
 @Composable
 fun CardMusician(item: MusicianDto, onCardClick: (Int) -> Unit) {
     Card(
+        onClick = {onCardClick(item.id)},
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 4.dp)
