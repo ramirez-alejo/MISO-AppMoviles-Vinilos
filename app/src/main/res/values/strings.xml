@@ -11,6 +11,10 @@
     <string name="buscar_coleccionista">Busca un coleccionista</string>
     <string name="coleccionistas_destacados">Collecionistas mas destacados</string>
     <string name="bienvenido">Bienvenido</string>
+    <string name="error">"Lo sentimos, se ha presentado un error y no podemos atender tu solicitud en este momento"</string>
+    <string name="volver">"Volver"</string>
+    <string name="fecha_de_lanzamiento">Fecha de lanzamiento: </string>
+    <string name="sello_discografico">Sello discográfico: </string>
     <string name="artista_grandes_exitos">Sus mas grandes éxitos</string>
     <string name="fecha_nacimiento">"Fecha de nacimiento: "</string>
 </resources>

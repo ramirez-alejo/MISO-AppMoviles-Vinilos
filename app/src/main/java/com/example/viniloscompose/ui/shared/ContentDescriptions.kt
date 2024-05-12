@@ -39,5 +39,6 @@ enum class ContentDescriptions(val value: String) {
     MUSICIANS_SCREEN_TITLE("MusicianTitle"),
     MUSICIANS_SCREEN_BODY("MusicianScreenBody"),
     MUSICIAN_CARD("MusicianCard"),
-    MUSICIAN_CARD_IMAGE("MusicianCardImage")
+    MUSICIAN_CARD_IMAGE("MusicianCardImage"),
+    ALBUM_CARD_BACK("AlbumCardBack"),
 }
