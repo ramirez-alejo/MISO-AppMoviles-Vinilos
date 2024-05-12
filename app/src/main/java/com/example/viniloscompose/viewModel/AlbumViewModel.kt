@@ -49,4 +49,10 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
         return response.filter { it.name.contains(query, true) }
     }
 
+    fun selectAlbum(album: AlbumDto?) {
+        state = state.copy(
+            selectedAlbum = album
+        )
+    }
+
 }

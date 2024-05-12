@@ -2,6 +2,7 @@ package com.example.viniloscompose.model.service.mocks
 
 import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.PerformerDto
+import com.example.viniloscompose.model.dto.TracksDto
 import com.example.viniloscompose.model.service.IAlbumService
 
 class AlbumServiceMock : IAlbumService {
@@ -30,7 +31,19 @@ class AlbumServiceMock : IAlbumService {
                 releaseDate = "2021-01-01",
                 description = "Description",
                 genre = "Genre",
-                recordLabel = "Record Label"
+                recordLabel = "Record Label",
+                tracks = listOf(
+                    TracksDto(
+                        id = 1,
+                        name = "Track 1",
+                        duration = "00:00"
+                    ),
+                    TracksDto(
+                        id = 2,
+                        name = "Track 2",
+                        duration = "00:00"
+                    )
+                )
             ),
             AlbumDto(
                 id = 2,
@@ -55,7 +68,19 @@ class AlbumServiceMock : IAlbumService {
                 releaseDate = "2021-01-01",
                 description = "Description",
                 genre = "Genre",
-                recordLabel = "Record Label"
+                recordLabel = "Record Label",
+                tracks = listOf(
+                    TracksDto(
+                        id = 1,
+                        name = "Track 1",
+                        duration = "00:00"
+                    ),
+                    TracksDto(
+                        id = 2,
+                        name = "Track 2",
+                        duration = "00:00"
+                    )
+                )
             ),
             AlbumDto(
                 id = 3,
@@ -80,7 +105,19 @@ class AlbumServiceMock : IAlbumService {
                 releaseDate = "2021-01-01",
                 description = "Description",
                 genre = "Genre",
-                recordLabel = "Record Label"
+                recordLabel = "Record Label",
+                tracks = listOf(
+                    TracksDto(
+                        id = 1,
+                        name = "Track 1",
+                        duration = "00:00"
+                    ),
+                    TracksDto(
+                        id = 2,
+                        name = "Track 2",
+                        duration = "00:00"
+                    )
+                )
             )
         )
         )
