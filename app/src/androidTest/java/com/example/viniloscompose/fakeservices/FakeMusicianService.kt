@@ -10,7 +10,10 @@ class FakeMusicianService(private val amount: Int) : IMusicianService {
             listOfMusicians = listOfMusicians + MusicianDto(
                 id = i,
                 image = "${i}.com",
-                name = "Musician: ${i}"
+                name = "Musician: ${i}",
+                albums =  emptyList(),
+                description = "",
+                birthDate = ""
             )
         }
         return Result.success(listOfMusicians)

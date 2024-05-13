@@ -10,6 +10,7 @@ import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
 import com.example.viniloscompose.fakeservices.FakeAlbumService
 import com.example.viniloscompose.model.repository.AlbumRepository
+import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.ui.screens.AlbumScreen
 import com.example.viniloscompose.ui.shared.ContentDescriptions
@@ -42,7 +43,9 @@ class AlbumScreenTest {
                 AlbumScreen(
                     onNavigate = { dest -> navController.navigate(dest) },
                     isSelected = { dest -> isSelected(dest) },
-                    albumRepository = repository
+                    albumRepository = repository,
+                    onCardClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route+"/$id")}
+
                 )
             }
         }

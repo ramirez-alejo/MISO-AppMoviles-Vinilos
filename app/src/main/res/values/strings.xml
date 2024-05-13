@@ -15,4 +15,6 @@
     <string name="volver">"Volver"</string>
     <string name="fecha_de_lanzamiento">Fecha de lanzamiento: </string>
     <string name="sello_discografico">Sello discográfico: </string>
+    <string name="artista_grandes_exitos">Sus mas grandes éxitos</string>
+    <string name="fecha_nacimiento">"Fecha de nacimiento: "</string>
 </resources>

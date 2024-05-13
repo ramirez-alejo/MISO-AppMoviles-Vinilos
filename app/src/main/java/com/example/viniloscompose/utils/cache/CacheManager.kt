@@ -5,7 +5,6 @@ import android.content.SharedPreferences
 import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.dto.MusicianDto
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 

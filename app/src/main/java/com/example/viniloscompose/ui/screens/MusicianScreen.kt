@@ -46,7 +46,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -55,7 +54,6 @@ import com.example.viniloscompose.R
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.model.service.mocks.MusicianServiceMock
-import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.BottomNavigation
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
@@ -69,7 +67,8 @@ import com.example.viniloscompose.viewModel.MusicianViewModel
 fun MusicianScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    musicianRepository: MusicianRepository
+    musicianRepository: MusicianRepository,
+    onCardClick: (Int) -> Unit
 ) {
     val musicianViewModel = remember { MusicianViewModel(musicianRepository) }
     var query by remember { mutableStateOf("") }
@@ -101,15 +100,15 @@ fun MusicianScreen(
             ) {
                 SearchBarMusician(onFilter = fun(newQuery: String) { query = newQuery })
                 Spacer(modifier = Modifier.height(16.dp))
-                Column (
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(horizontal = 16.dp),
-                ){
+                ) {
                     TitleMusician()
                     Spacer(modifier = Modifier.height(12.dp))
                     val filteredMusicians = musicianViewModel.getFilteredMusicians(query)
-                    BodyMusicianContent(filteredMusicians)
+                    BodyMusicianContent(filteredMusicians,onCardClick)
                 }
             }
         }
@@ -118,7 +117,10 @@ fun MusicianScreen(
 
 
 @Composable
-fun BodyMusicianContent(musicians: List<MusicianDto>) {
+fun BodyMusicianContent(
+    musicians: List<MusicianDto>,
+    onCardClick: (Int) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -128,7 +130,7 @@ fun BodyMusicianContent(musicians: List<MusicianDto>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = musicians) { _, item ->
-            CardMusician(item)
+            CardMusician(item,onCardClick)
         }
     }
 }
@@ -151,11 +153,15 @@ fun TitleMusician() {
 }
 
 @Composable
-fun CardMusician(item: MusicianDto) {
+fun CardMusician(item: MusicianDto, onCardClick: (Int) -> Unit) {
     Card(
+        onClick = {onCardClick(item.id)},
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 4.dp)
+            .clickable {
+                onCardClick(item.id)
+            }
             .semantics { contentDescription = ContentDescriptions.MUSICIAN_CARD.value }
     ) {
         Row(
@@ -186,7 +192,10 @@ fun CardMusician(item: MusicianDto) {
                         text = item.name,
                         style = MaterialTheme.typography.titleMedium
                     )
-                    Text(text = stringResource(id = R.string.artista), style = MaterialTheme.typography.titleSmall)
+                    Text(
+                        text = stringResource(id = R.string.artista),
+                        style = MaterialTheme.typography.titleSmall
+                    )
                 }
             }
             Icon(
@@ -194,7 +203,9 @@ fun CardMusician(item: MusicianDto) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
-                    .clickable { }
+                    .clickable {
+                        onCardClick(item.id)
+                    }
             )
 
         }
@@ -212,9 +223,9 @@ fun SearchBarMusician(onFilter: (String) -> Unit) {
         },
         query = query,
         onQueryChange = {
-                            query = it
-                            onFilter(query)
-                        },
+            query = it
+            onFilter(query)
+        },
         onSearch = {},
         active = false,
         onActiveChange = {},
@@ -256,7 +267,8 @@ fun DefaulMusiciatPreview() {
             MusicianScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                MusicianRepository(cacheManager, networkValidator, MusicianServiceMock())
+                MusicianRepository(cacheManager, networkValidator, MusicianServiceMock()),
+                onCardClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route+"/$id")}
             )
         }
     }

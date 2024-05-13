@@ -48,4 +48,8 @@ class MusicianViewModel(private val musicianRepository: MusicianRepository) : Vi
         return response.filter { it.name.contains(query, true) }
     }
 
+    fun getMusician(id:Int):MusicianDto{
+        return response.first { it.id == id }
+    }
+
 }

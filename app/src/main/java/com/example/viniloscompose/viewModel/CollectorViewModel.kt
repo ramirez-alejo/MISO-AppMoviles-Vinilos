@@ -6,9 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.CollectorDto
-import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.model.repository.CollectorRepository
-import com.example.viniloscompose.viewModel.state.AlbumState
 import com.example.viniloscompose.viewModel.state.CollectorState
 import kotlinx.coroutines.launch
 
