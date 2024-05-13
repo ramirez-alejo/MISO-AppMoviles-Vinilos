@@ -8,12 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.viewModel.state.AlbumState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.logging.Logger
 
 class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel() {
     var state by mutableStateOf(AlbumState())
-        private  set
+        private set
     private var response: List<AlbumDto> by mutableStateOf(listOf())
         private set
 
@@ -25,8 +27,10 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
             try {
                 var albumList = albumRepository.getAlbums()
                 if (albumList.isEmpty()) {
-                    albumRepository.refreshData()
-                    albumList = albumRepository.getAlbums()
+                    withContext(Dispatchers.IO) {
+                        albumRepository.refreshData()
+                        albumList = albumRepository.getAlbums()
+                    }
                 }
                 response = albumList
 
@@ -50,8 +54,8 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
         return response.filter { it.name.contains(query, true) }
     }
 
-    fun getAlbum(id: Int): AlbumDto{
-        return  response.first { it.id == id }
+    fun getAlbum(id: Int): AlbumDto {
+        return response.first { it.id == id }
     }
 
     fun selectAlbum(album: AlbumDto?) {

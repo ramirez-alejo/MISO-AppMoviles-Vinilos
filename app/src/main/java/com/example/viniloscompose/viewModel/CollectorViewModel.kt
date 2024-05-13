@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.viewModel.state.CollectorState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class CollectorViewModel(private val collectorRepository: CollectorRepository) : ViewModel() {
     var state by mutableStateOf(CollectorState())
@@ -24,8 +26,10 @@ class CollectorViewModel(private val collectorRepository: CollectorRepository) :
             try {
                 var collectorList = collectorRepository.getCollectors()
                 if (collectorList.isEmpty()) {
-                    collectorRepository.refreshData()
-                    collectorList = collectorRepository.getCollectors()
+                    withContext(Dispatchers.IO) {
+                        collectorRepository.refreshData()
+                        collectorList = collectorRepository.getCollectors()
+                    }
                 }
                 response = collectorList
 
