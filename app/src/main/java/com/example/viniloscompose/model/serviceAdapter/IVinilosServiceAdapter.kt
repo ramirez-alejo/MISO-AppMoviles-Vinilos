@@ -5,5 +5,4 @@ import com.example.viniloscompose.model.dto.*
 interface IVinilosServiceAdapter {
     suspend fun getMusicians() : Result<List<MusicianDto>>
     suspend fun getAlbums() : Result<List<AlbumDto>>
-    suspend fun getCollectors() : Result<List<CollectorDto>>
 }

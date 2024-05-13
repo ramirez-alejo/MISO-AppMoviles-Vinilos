@@ -10,7 +10,10 @@ import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.viewModel.state.MucisianState
 import kotlinx.coroutines.launch
 
-class MusicianViewModel(private val musicianRepository: MusicianRepository) : ViewModel() {
+class MusicianViewModel(
+    private val musicianRepository: MusicianRepository = MusicianRepository.getInstance()
+) : ViewModel() {
+
     var state by mutableStateOf(MucisianState())
         private set
     var response: List<MusicianDto> by mutableStateOf(listOf())
@@ -21,35 +24,26 @@ class MusicianViewModel(private val musicianRepository: MusicianRepository) : Vi
             state = state.copy(
                 isLoading = true
             )
-            try {
-                var musicianList = musicianRepository.getMusicians()
-                if (musicianList.isEmpty()) {
-                    musicianRepository.refreshData()
-                    musicianList = musicianRepository.getMusicians()
-                }
-                response = musicianList
+            val musicianList = musicianRepository.getMusicians()
+            response = musicianList
 
-                state = state.copy(
-                    isLoading = false,
-                    musicians = response,
-                    error = null
-                )
-            } catch (e: Exception) {
-                response = emptyList()
-                state = state.copy(
-                    isLoading = false,
-                    error = e.message
-                )
-            }
+            state = state.copy(
+                isLoading = false,
+                musicians = response
+
+            )
         }
     }
 
     fun getFilteredMusicians(query: String): List<MusicianDto> {
         return response.filter { it.name.contains(query, true) }
     }
-
-    fun getMusician(id:Int):MusicianDto{
-        return response.first { it.id == id }
+    protected fun setState(musicians: List<MusicianDto>, isLoading: Boolean) {
+        state = MucisianState(
+            musicians = musicians,
+            isLoading = isLoading
+        )
+        response = musicians
     }
 
 }
