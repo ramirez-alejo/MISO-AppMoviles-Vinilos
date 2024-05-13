@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.repository.MusicianRepository
 import com.example.viniloscompose.viewModel.state.MucisianState
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MusicianViewModel(private val musicianRepository: MusicianRepository) : ViewModel() {
     var state by mutableStateOf(MucisianState())
@@ -24,8 +26,10 @@ class MusicianViewModel(private val musicianRepository: MusicianRepository) : Vi
             try {
                 var musicianList = musicianRepository.getMusicians()
                 if (musicianList.isEmpty()) {
-                    musicianRepository.refreshData()
-                    musicianList = musicianRepository.getMusicians()
+                    withContext(Dispatchers.IO) {
+                        musicianRepository.refreshData()
+                        musicianList = musicianRepository.getMusicians()
+                    }
                 }
                 response = musicianList
 
