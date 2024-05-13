@@ -2,6 +2,14 @@
 
 Esta aplicación consiste en un flujo de vistas que muestran los álbumes y los comentarios que coleccionistas han hecho sobre estos. La aplicación permite a los usuarios ver los álbumes disponibles, ver los detalles de un álbum en particular y agregar comentarios a los álbumes. La aplicación también permite a los usuarios ver los comentarios que otros coleccionistas han hecho sobre los álbumes.
 
+## APK - Iteración 1
+
+[APK-vinilos](https://drive.google.com/file/d/1LQ576A_pfC64xrb9sUgMTngV1a09kQ5N/view?usp=drive_link)
+
+### Aplicación instalada con el apk  ejecutándose en un dispositivo físico
+
+<img src="https://github.com/ramirez-alejo/MISO-AppMoviles-Vinilos/assets/142703349/a71ee19b-2e06-4bb6-83a0-7c2e5c3dea78" width=30% height=30%>
+
 ## Instrucciones para la ejecución del proyecto
 
 ### Requisitos previos
