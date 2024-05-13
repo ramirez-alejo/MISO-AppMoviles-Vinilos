@@ -36,7 +36,7 @@ import java.util.Locale
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun InicioScreen( onNavigate: (String) -> Unit ) {
+fun InicioScreen(onNavigate: (String) -> Unit) {
     Scaffold(
         modifier = Modifier.semantics {
             contentDescription = ContentDescriptions.INICIO_SCREEN.value
@@ -47,7 +47,7 @@ fun InicioScreen( onNavigate: (String) -> Unit ) {
 }
 
 @Composable
-fun BodyContent( onNavigate: (String) -> Unit) {
+fun BodyContent(onNavigate: (String) -> Unit) {
     val formattedDate = SimpleDateFormat(
         "EEEE dd MMMM yyyy",
         Locale.getDefault()
@@ -60,7 +60,7 @@ fun BodyContent( onNavigate: (String) -> Unit) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
 
-        ){
+            ) {
             Text(formattedDate)
             Spacer(modifier = Modifier.height(12.dp))
             Text(
@@ -88,8 +88,7 @@ fun BodyContent( onNavigate: (String) -> Unit) {
             )
         }
         Spacer(modifier = Modifier.height(20.dp))
-        Column(
-        ) {
+        Column {
             Button(
                 onClick = {
                     onNavigate(AppScreens.AlbumScreen.route)
