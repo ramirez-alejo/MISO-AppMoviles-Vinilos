@@ -9,12 +9,12 @@ import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.viewModel.state.AlbumState
 import kotlinx.coroutines.launch
-import java.util.logging.Logger
 
-class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel() {
+class AlbumViewModel(private val albumRepository: AlbumRepository = AlbumRepository.getInstance()) : ViewModel() {
+
     var state by mutableStateOf(AlbumState())
         private  set
-    private var response: List<AlbumDto> by mutableStateOf(listOf())
+    var response: List<AlbumDto> by mutableStateOf(listOf())
         private set
 
     init {
@@ -22,26 +22,14 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
             state = state.copy(
                 isLoading = true
             )
-            try {
-                var albumList = albumRepository.getAlbums()
-                if (albumList.isEmpty()) {
-                    albumRepository.refreshData()
-                    albumList = albumRepository.getAlbums()
-                }
-                response = albumList
+            val albumList = albumRepository.getAlbums()
+            response = albumList
 
-                state = state.copy(
-                    isLoading = false,
-                    albums = response,
-                    error = null
-                )
-            } catch (e: Exception) {
-                response = emptyList()
-                state = state.copy(
-                    isLoading = false,
-                    error = e.message
-                )
-            }
+            state = state.copy(
+                isLoading = false,
+                albums = response
+
+            )
         }
     }
 
@@ -50,16 +38,12 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
         return response.filter { it.name.contains(query, true) }
     }
 
-    fun getAlbum(id: Int): AlbumDto{
-        return  response.first { it.id == id }
-    }
-
-    fun selectAlbum(album: AlbumDto?) {
-        Logger.getLogger("AlbumViewModel").info("Selected album: $album")
-        state = state.copy(
-            selectedAlbum = album
+    protected fun setState(albums: List<AlbumDto>, isLoading: Boolean) {
+        state = AlbumState(
+            albums = albums,
+            isLoading = isLoading
         )
-        Logger.getLogger("AlbumViewModel").info("Selected album: ${state.selectedAlbum}")
+        response = albums
     }
 
 }

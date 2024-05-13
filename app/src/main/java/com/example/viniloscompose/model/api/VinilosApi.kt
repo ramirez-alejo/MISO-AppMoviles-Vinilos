@@ -1,7 +1,6 @@
 package com.example.viniloscompose.model.api
 
 import com.example.viniloscompose.model.dto.AlbumDto
-import com.example.viniloscompose.model.dto.CollectorDto
 import com.example.viniloscompose.model.dto.MusicianDto
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -14,8 +13,6 @@ interface IVinilosApi {
 
     @GET("albums")
     suspend fun getAlbums(): List<AlbumDto>
-    @GET("collectors")
-    suspend fun getCollectors(): List<CollectorDto>
     companion object{
         private var vinilosApi: IVinilosApi? = null
         fun getInstace(): IVinilosApi {
@@ -28,7 +25,6 @@ interface IVinilosApi {
             return  vinilosApi!!
         }
     }
-
 
 
 }

@@ -39,9 +39,9 @@ class InicioScreenTest {
     @Test
     fun clickOnCollector() {
         composeTestRule.waitUntil(30000) {
-            composeTestRule.onNodeWithContentDescription(ContentDescriptions.INICIO_SCREEN.value).isDisplayed()
+            composeTestRule.onNodeWithText("Bienvenido").isDisplayed()
         }
         clickCollector(composeTestRule)
-        composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_SCREEN.value).assertIsDisplayed()
+        composeTestRule.onNodeWithText("Bienvenido Coleccionistas").assertIsDisplayed()
     }
 }
