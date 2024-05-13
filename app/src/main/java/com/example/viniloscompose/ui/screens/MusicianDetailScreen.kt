@@ -166,7 +166,7 @@ private fun MusicianAlbumsContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(horizontal = 16.dp),
+            .padding(bottom = 84.dp, start = 16.dp),
     ) {
         TitleMusicianAlbums()
         Spacer(modifier = Modifier.height(12.dp))
