@@ -35,7 +35,7 @@ class CollectorScreenTest {
     lateinit var navController: TestNavHostController
 
     lateinit var repository: CollectorRepository
-    var amountOfCollectors: Int = 5
+    var amountOfCollectors: Int = 3
 
     private fun setupContent(amount: Int) {
         amountOfCollectors = amount
@@ -63,7 +63,7 @@ class CollectorScreenTest {
     }
 
     @Test
-    fun renderAlbumScreenWith3Albums() {
+    fun renderCollectorScreenWith3Collectors() {
         composeTestRule.waitUntil(5000) {
                 composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_SCREEN.value)
                 .isDisplayed()
