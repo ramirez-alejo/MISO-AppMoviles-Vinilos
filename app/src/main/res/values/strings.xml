@@ -4,6 +4,12 @@
     <string name="explora_albumes">Explora álbumes</string>
     <string name="buscar_album">Busca álbumes ahora</string>
     <string name="artistas_del_momento">Artistas del momento</string>
+    <string name="agregar_album">Agregar Album</string>
+    <string name="agregar_album_cancion_form_title">Agregar canción</string>
+    <string name="agregar_album_cancion_nombre">Nombre</string>
+    <string name="agregar_album_cancion_duracion">Duracion</string>
+    <string name="agregar_album_cancion_cancelar">Cancelar</string>
+    <string name="agregar_album_cancion_guardar">Guardar</string>
     <string name="artista">Artista</string>
     <string name="buscar_artista">Busca tus artistas favoritos</string>
     <string name="visitante">Visitante</string>

@@ -2,41 +2,62 @@ package com.example.viniloscompose.ui.screens
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.PlayArrow
+import androidx.compose.material.icons.sharp.Add
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.input.pointer.motionEventSpy
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -74,159 +95,299 @@ fun AlbumDetailScreen(
         bottomBar = {
             BottomNavigation(onNavigate, isSelected)
         },
-        modifier = Modifier.semantics {
-            contentDescription = ContentDescriptions.ALBUM_SCREEN.value
-        }
-    ) {
-        AlbumDetailScreenBody(album, popBackStackAction)
+        modifier = Modifier
+            .semantics {
+                contentDescription = ContentDescriptions.ALBUM_SCREEN.value
+            },
+
+        ) {
+        AlbumDetailScreenBody(album, popBackStackAction, it)
     }
 
 }
 
 @Composable
-fun AlbumDetailScreenBody(album: AlbumDto, popBackStackAction: () -> Unit) {
+fun AlbumDetailScreenBody(
+    album: AlbumDto,
+    paddingpopBackStackAction: () -> Unit,
+    paddingValues: PaddingValues
+) {
     //Lets declare 4 colors and use them randomly in the gradient
-    val colors = listOf(Color.Blue, Color.Red, Color.Green, Color.Yellow)
+    val colors = listOf(Color.Blue, Color.Red, Color.LightGray, Color.Yellow)
     val currentColor = colors.random()
-
-    Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.4f)
-                .background(Brush.verticalGradient(listOf(currentColor, Color.White)))
-        ) {
-
-            IconButton(
-                onClick = {
-                    popBackStackAction()
-                },
-                modifier = Modifier
-                    .padding(16.dp)
-                    .size(24.dp)
-                    .align(Alignment.TopStart)
-                    .semantics {
-                        contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
-                    }
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = null,
-                    tint = Color.White
-                )
-            }
-
-            AsyncImage(
-                modifier = Modifier
-                    .size(220.dp)
-                    .align(Alignment.BottomCenter)
-                    .semantics {
-                        contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
-                    },
-                model = album.cover,
-                contentDescription = album.name
-            )
-        }
-
+    Column(
+        modifier = Modifier
+            .padding(paddingValues)
+            .fillMaxSize()
+    ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.6f)
-                .background(Color.White)
-                .padding(16.dp)
+                .verticalScroll(rememberScrollState())
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                Box {
+                    Row(
+                        modifier = Modifier
+                            .background(
+                                Brush.verticalGradient(
+                                    listOf(currentColor, MaterialTheme.colorScheme.background),
+                                    0f
+                                )
+                            )
+                            .fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.Bottom
+                    ) {
+                        AsyncImage(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(top = 80.dp)
+                                .size(250.dp)
+                                .semantics {
+                                    contentDescription = ContentDescriptions.ALBUM_CARD_IMAGE.value
+                                },
+                            model = album.cover,
+                            contentDescription = album.name
+                        )
+                    }
+                    IconButton(
+                        onClick = {
+                            paddingpopBackStackAction()
+                        },
+                        modifier = Modifier
+                            .padding(top = 32.dp, start = 16.dp)
+                            .size(24.dp)
+                            .semantics {
+                                contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
+                            }
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.inverseSurface
+                        )
+                    }
+                }
+                Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) {
+                    Row {
+                        Text(
+                            text = album.name,
+                            style = MaterialTheme.typography.titleLarge
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(
+                            text = album.genre,
+                            style = MaterialTheme.typography.bodyMedium,
+                            modifier = Modifier.align(Alignment.CenterVertically),
+                            color = currentColor
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .semantics {
+                                contentDescription =
+                                    ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                            }
+                    ) {
+
+                        Text(
+                            text = album.performers.joinToString { it.name },
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .semantics {
+                                contentDescription =
+                                    ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                            }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.fecha_de_lanzamiento),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = album.releaseDate?.let { convertirFormatoFecha(it) } ?: "",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Row(
+                        modifier = Modifier
+                            .padding(top = 4.dp)
+                            .semantics {
+                                contentDescription =
+                                    ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                            }
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.sello_discografico),
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text(
+                            text = album.recordLabel,
+                            style = MaterialTheme.typography.bodyMedium
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(18.dp))
+                    Text(
+                        text = album.description,
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Thin
+                    )
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    AlbumTrackList(album.tracks)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun AlbumTrackList(tracks: List<TracksDto>?) {
+    var openForm by remember {
+        mutableStateOf(false)
+    }
+
+    val onSave = fun(name: String, duration: String) {
+
+    }
+    if (!openForm) {
+        if (tracks != null) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 4.dp)
+                    .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_BODY.value }
+                    .heightIn(60.dp, 500.dp),
+
+                verticalArrangement = Arrangement.Top,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                itemsIndexed(items = tracks) { _, item ->
+                    CardTrack(item)
+                }
+            }
+        }
+        AlbumCreateButton(onClick = { openForm = true })
+    } else {
+        AlbumSongForm(onCancel = { openForm = false }, onSave = onSave)
+    }
+
+}
+
+@Composable
+private fun AlbumSongForm(onCancel: () -> Unit, onSave: (name: String, duration: String) -> Unit) {
+    var inputName by remember {
+        mutableStateOf("")
+    }
+    var inputDuration by remember {
+        mutableStateOf("")
+    }
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 4.dp)
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+    ) {
+        Column(
+            modifier = Modifier.padding(16.dp)
         ) {
             Row {
                 Text(
-                    text = album.name,
-                    style = MaterialTheme.typography.titleLarge,
-                    color = Color.Black
+                    stringResource(id = R.string.agregar_album_cancion_form_title),
+                    style = MaterialTheme.typography.labelLarge
                 )
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(
-                    text = album.genre,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = currentColor,
-                    modifier = Modifier.align(Alignment.CenterVertically)
+            }
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(IntrinsicSize.Min)
+            ) {
+                TextField(
+                    value = inputName,
+                    onValueChange = { inputName = it },
+                    label = { Text(stringResource(id = R.string.agregar_album_cancion_nombre)) },
+                    maxLines = 2,
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.surface,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .fillMaxWidth()
+                )
+                TextField(
+                    value = inputDuration,
+                    onValueChange = { inputDuration = it },
+                    label = { Text(stringResource(id = R.string.agregar_album_cancion_duracion)) },
+                    maxLines = 2,
+                    textStyle = TextStyle(
+                        color = MaterialTheme.colorScheme.surface,
+                        fontWeight = FontWeight.Bold
+                    ),
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .fillMaxWidth()
                 )
             }
             Row(
                 modifier = Modifier
-                    .padding(top = 8.dp)
-                    .semantics {
-                        contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
-                    }
+                    .align(alignment = Alignment.End)
+                    .padding(top = 16.dp)
             ) {
-
-                Text(
-                    text = album.performers.joinToString { it.name },
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
+                Button(onClick = onCancel) {
+                    Text(stringResource(id = R.string.agregar_album_cancion_cancelar))
+                }
+                TextButton(onClick = { onSave(inputName, inputDuration) }) {
+                    Text(stringResource(id = R.string.agregar_album_cancion_guardar))
+                }
             }
-            Row(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .semantics {
-                        contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
-                    }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.fecha_de_lanzamiento),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = album.releaseDate?.let { convertirFormatoFecha(it) } ?: "",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-            }
-            Row(
-                modifier = Modifier
-                    .padding(top = 8.dp)
-                    .semantics {
-                        contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
-                    }
-            ) {
-                Text(
-                    text = stringResource(id = R.string.sello_discografico),
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = album.recordLabel,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
-                )
-            }
-            Spacer(modifier = Modifier.height(18.dp))
-            Text(
-                text = album.description,
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-            Spacer(modifier = Modifier.height(18.dp))
-            if (album.tracks != null)
-                AlbumTrackList(album.tracks!!)
         }
     }
 }
 
 @Composable
-private fun AlbumTrackList(tracks: List<TracksDto>) {
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(horizontal = 4.dp)
-            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_BODY.value },
-
-        verticalArrangement = Arrangement.Top,
-        horizontalAlignment = Alignment.CenterHorizontally
+private fun AlbumCreateButton(onClick: () -> Unit) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.End,
+        modifier = Modifier.fillMaxWidth()
     ) {
-        itemsIndexed(items = tracks) { _, item ->
-            CardTrack(item)
+        TextButton(
+            onClick = onClick,
+            modifier = Modifier
+                .semantics {
+                    contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
+                }
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .padding(horizontal = 8.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Sharp.Add,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = stringResource(id = R.string.agregar_album),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
         }
     }
 }
@@ -250,14 +411,18 @@ private fun CardTrack(track: TracksDto) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-
-                Icon(
-                    imageVector = Icons.Rounded.PlayArrow,
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(20.dp)
-                        .clickable { }
-                )
+                IconButton(
+                    onClick = { /*TODO*/ },
+                ) {
+                    Icon(
+                        imageVector = Icons.Rounded.PlayArrow,
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .clickable { }
+                            .border(1.dp, MaterialTheme.colorScheme.inverseSurface, CircleShape)
+                    )
+                }
                 Spacer(modifier = Modifier.width(18.dp))
                 Column {
                     Text(
@@ -266,15 +431,11 @@ private fun CardTrack(track: TracksDto) {
                         maxLines = 1,
                         overflow = TextOverflow.Clip,
                         modifier = Modifier
-                            .widthIn(max = 250.dp),
-                        color = Color.Black
+                            .widthIn(max = 250.dp)
                     )
-
-
                     Text(
                         text = "${track.duration} min",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = Color.Black
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -314,7 +475,6 @@ fun AlbumDetailScreenPreview() {
                 albumRepository = albumRepository,
                 popBackStackAction = { navController.popBackStack() },
                 albumId = 1
-
             )
         }
     }
