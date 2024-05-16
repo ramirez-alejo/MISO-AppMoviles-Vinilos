@@ -1,38 +1,46 @@
 package com.example.viniloscompose.model.repository
 
 import com.example.viniloscompose.model.dto.AlbumDto
+import com.example.viniloscompose.model.dto.CreateTrackDto
+import com.example.viniloscompose.model.dto.TracksDto
 import com.example.viniloscompose.model.service.IAlbumService
 import com.example.viniloscompose.utils.cache.CacheManager
 import com.example.viniloscompose.utils.cache.ICacheManager
 import com.example.viniloscompose.utils.network.INetworkValidator
 
-class AlbumRepository  (
-    private val cacheManager : ICacheManager,
-    private val networkValidator : INetworkValidator,
-    private val service : IAlbumService
-    ){
+class AlbumRepository(
+    private val cacheManager: ICacheManager,
+    private val networkValidator: INetworkValidator,
+    private val service: IAlbumService
+) {
 
     fun getAlbums(): List<AlbumDto> {
-        return if(cacheManager.hasCollection(CacheManager.ALBUMS_SPREFS)){
+        return if (cacheManager.hasCollection(CacheManager.ALBUMS_SPREFS)) {
             return cacheManager.getAlbums()
         } else emptyList()
     }
 
-    suspend fun refreshData(): List<AlbumDto>{
-        var albums = getAlbums()
-        return if(albums.isEmpty()){
-            if(!networkValidator.isNetworkAvailable()){
-                emptyList()
-            } else {
-                albums = service.getAlbums().getOrThrow()
-                setAlbums(albums)
-                albums
-            }
-        } else albums
+    suspend fun refreshData(): List<AlbumDto> {
+        return if (!networkValidator.isNetworkAvailable()) {
+            emptyList()
+        } else {
+            val albums = service.getAlbums().getOrThrow()
+            setAlbums(albums)
+            albums
+        }
     }
-    private fun setAlbums(albums: List<AlbumDto>){
+
+    private fun setAlbums(albums: List<AlbumDto>) {
         if(!cacheManager.hasCollection(CacheManager.ALBUMS_SPREFS)){
             cacheManager.setAlbums(albums)
+        }
+    }
+
+    suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): TracksDto? {
+        return if (!networkValidator.isNetworkAvailable()) {
+            return null
+        } else {
+            service.addTrackToAlbum(albumId, track).getOrThrow()
         }
     }
 }

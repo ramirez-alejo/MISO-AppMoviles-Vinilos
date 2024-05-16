@@ -21,34 +21,36 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
 
     init {
         viewModelScope.launch {
-            state = state.copy(
-                isLoading = true
-            )
-            try {
-                var albumList = albumRepository.getAlbums()
-                if (albumList.isEmpty()) {
-                    withContext(Dispatchers.IO) {
-                        albumRepository.refreshData()
-                        albumList = albumRepository.getAlbums()
-                    }
-                }
-                response = albumList
-
-                state = state.copy(
-                    isLoading = false,
-                    albums = response,
-                    error = null
-                )
-            } catch (e: Exception) {
-                response = emptyList()
-                state = state.copy(
-                    isLoading = false,
-                    error = e.message
-                )
-            }
+            refreshState()
         }
     }
 
+    private suspend fun refreshState() {
+        state = state.copy(
+            isLoading = true
+        )
+        try {
+            albumRepository.refreshData()
+            val albumList = albumRepository.getAlbums()
+            if (albumList.isEmpty()) {
+                withContext(Dispatchers.IO) {
+                    response = albumRepository.getAlbums()
+                }
+            }
+            response = albumList
+            state = state.copy(
+                isLoading = false,
+                albums = response,
+                error = null
+            )
+        } catch (e: Exception) {
+            response = emptyList()
+            state = state.copy(
+                isLoading = false,
+                error = e.message
+            )
+        }
+    }
 
     fun getFilteredAlbums(query: String): List<AlbumDto> {
         return response.filter { it.name.contains(query, true) }
@@ -65,5 +67,4 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
         )
         Logger.getLogger("AlbumViewModel").info("Selected album: ${state.selectedAlbum}")
     }
-
 }
