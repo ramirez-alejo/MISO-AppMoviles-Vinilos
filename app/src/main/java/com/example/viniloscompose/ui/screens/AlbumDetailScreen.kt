@@ -101,13 +101,15 @@ fun AlbumDetailScreen(
     val state = albumViewModel.state
     //Lets declare 4 colors and use them randomly in the gradient
     val colors = listOf(Color.Blue, Color.Red, Color.LightGray, Color.Yellow)
-    val currentColor = colors.random()
+    val currentColor = remember {
+        colors.random()
+    }
     Scaffold(
         bottomBar = {
             BottomNavigation(onNavigate, isSelected)
         },
         modifier = Modifier.semantics {
-            contentDescription = ContentDescriptions.ALBUM_SCREEN.value
+            contentDescription = ContentDescriptions.ALBUM_DETAIL_SCREEN.value
         },
 
         ) {
@@ -155,6 +157,7 @@ fun AlbumDetailScreenBody(
         modifier = Modifier
             .padding(paddingValues)
             .fillMaxSize()
+            .semantics { contentDescription = ContentDescriptions.ALBUM_DETAIL_BODY.value }
     ) {
         Column(
             modifier = Modifier
@@ -194,7 +197,7 @@ fun AlbumDetailScreenBody(
                             .padding(top = 32.dp, start = 16.dp)
                             .size(24.dp)
                             .semantics {
-                                contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
+                                contentDescription = ContentDescriptions.ALBUM_DETAIL_BACK.value
                             }) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -206,13 +209,21 @@ fun AlbumDetailScreenBody(
                 Column(modifier = Modifier.padding(horizontal = 16.dp, vertical = 11.dp)) {
                     Row {
                         Text(
-                            text = album.name, style = MaterialTheme.typography.titleLarge
+                            text = album.name, style = MaterialTheme.typography.titleLarge,
+                            modifier = Modifier.semantics {
+                                contentDescription = ContentDescriptions.ALBUM_DETAIL_TITLE.value
+                            }
                         )
                         Spacer(modifier = Modifier.width(16.dp))
                         Text(
                             text = album.genre,
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.align(Alignment.CenterVertically),
+                            modifier = Modifier
+                                .align(Alignment.CenterVertically)
+                                .semantics {
+                                    contentDescription =
+                                        ContentDescriptions.ALBUM_DETAIL_GENRE.value
+                                },
                             color = currentColor
                         )
                     }
@@ -230,7 +241,7 @@ fun AlbumDetailScreenBody(
                     Row(modifier = Modifier
                         .padding(top = 4.dp)
                         .semantics {
-                            contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                            contentDescription = ContentDescriptions.ALBUM_DETAIL_DATE.value
                         }) {
                         Text(
                             text = stringResource(id = R.string.fecha_de_lanzamiento),
@@ -243,7 +254,7 @@ fun AlbumDetailScreenBody(
                     Row(modifier = Modifier
                         .padding(top = 4.dp)
                         .semantics {
-                            contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
+                            contentDescription = ContentDescriptions.ALBUM_DETAIL_LABEL.value
                         }) {
                         Text(
                             text = stringResource(id = R.string.sello_discografico),
@@ -294,7 +305,9 @@ private fun AlbumTrackList(
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(horizontal = 4.dp)
-            .semantics { contentDescription = ContentDescriptions.ALBUM_SCREEN_BODY.value }
+            .semantics {
+                contentDescription = ContentDescriptions.ALBUM_DETAIL_TRACK_LIST.value
+            }
             .heightIn(0.dp, 500.dp),
 
             verticalArrangement = Arrangement.Top,
@@ -307,12 +320,16 @@ private fun AlbumTrackList(
         }
         AlbumCreateButton(onClick = { openForm = true })
     } else {
-        AlbumSongForm(album, onCancel = {
-            openForm = false
-            coroutineScope.launch {
-                trackListViewModel.refreshState(albumId = album.id)
-            }
-        }, trackRepository = trackRepository)
+        AlbumSongForm(
+            album,
+            onCancel = {
+                openForm = false
+                coroutineScope.launch {
+                    trackListViewModel.refreshState(albumId = album.id)
+                }
+            },
+            trackRepository = trackRepository
+        )
     }
 
 }
@@ -336,7 +353,10 @@ private fun AlbumSongForm(
             Row {
                 Text(
                     stringResource(id = R.string.agregar_album_cancion_form_title),
-                    style = MaterialTheme.typography.labelLarge
+                    style = MaterialTheme.typography.labelLarge,
+                    modifier = Modifier.semantics {
+                        contentDescription = ContentDescriptions.ALBUM_DETAIL_FORM_TITLE.value
+                    }
                 )
             }
             Row(
@@ -354,7 +374,11 @@ private fun AlbumSongForm(
                     ),
                     modifier = Modifier
                         .weight(0.6f)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .semantics {
+                            contentDescription =
+                                ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_NAME.value
+                        },
                     isError = !viewModel.stateOfName(),
                     supportingText = { Text(stringResource(id = R.string.agregar_album_cancion_nombre_ayuda)) })
                 Spacer(modifier = Modifier.width(16.dp))
@@ -368,7 +392,11 @@ private fun AlbumSongForm(
                     ),
                     modifier = Modifier
                         .weight(0.4f)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .semantics {
+                            contentDescription =
+                                ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_DURATION.value
+                        },
                     isError = !viewModel.stateOfDuration(),
                     supportingText = { Text(stringResource(id = R.string.agregar_album_cancion_duracion_ayuda)) })
             }
@@ -377,12 +405,21 @@ private fun AlbumSongForm(
                     .align(alignment = Alignment.End)
                     .padding(top = 16.dp)
             ) {
-                TextButton(onClick = onCancel) {
+                TextButton(
+                    onClick = onCancel,
+                    modifier = Modifier.semantics {
+                        contentDescription =
+                            ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_CANCEL.value
+                    }) {
                     Text(stringResource(id = R.string.agregar_album_cancion_cancelar))
                 }
                 Button(
                     onClick = { viewModel.addTrackToAlbum(album.id, onCancel) },
-                    enabled = viewModel.stateOfName() && viewModel.stateOfDuration()
+                    enabled = viewModel.stateOfName() && viewModel.stateOfDuration(),
+                    modifier = Modifier.semantics {
+                        contentDescription =
+                            ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_CREATE.value
+                    }
                 ) {
                     Text(stringResource(id = R.string.agregar_album_cancion_guardar))
                 }
@@ -398,11 +435,13 @@ private fun AlbumCreateButton(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.End,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
     ) {
-        TextButton(onClick = onClick, modifier = Modifier.semantics {
-            contentDescription = ContentDescriptions.ALBUM_CARD_BACK.value
-        }) {
+        TextButton(onClick = onClick, modifier = Modifier
+            .semantics {
+                contentDescription = ContentDescriptions.ALBUM_DETAIL_TRACK_CREATE.value
+            }) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.End,
@@ -428,7 +467,9 @@ private fun CardTrack(track: TracksDto) {
     Card(
         modifier = Modifier
             .fillMaxSize()
-            .padding(vertical = 1.dp), shape = RectangleShape
+            .padding(vertical = 1.dp)
+            .semantics { contentDescription = ContentDescriptions.ALBUM_DETAIL_CARD_TRACK.value },
+        shape = RectangleShape
     ) {
         Row(
             modifier = Modifier
