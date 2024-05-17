@@ -15,6 +15,7 @@ import androidx.navigation.navArgument
 import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.model.repository.MusicianRepository
+import com.example.viniloscompose.model.repository.TrackRepository
 import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.screens.AlbumDetailScreen
 import com.example.viniloscompose.ui.screens.AlbumScreen
@@ -33,6 +34,7 @@ fun AppNavigation() {
     val networkValidator = NetworkValidator(application)
     val service = remember { VinilosService() }
     val albumRepository = remember { AlbumRepository(cacheManager, networkValidator, service) }
+    val trackRepository = remember {TrackRepository(cacheManager, networkValidator, service)}
     val musicianRepository =
         remember { MusicianRepository(cacheManager, networkValidator, service) }
     val collectorRepository =
@@ -99,8 +101,8 @@ fun AppNavigation() {
                 albumRepository = albumRepository,
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = {rute -> AppScreens.AlbumScreen.route == rute},
-                popBackStackAction = { navController.popBackStack() }
-
+                popBackStackAction = { navController.popBackStack() },
+                trackRepository = trackRepository
             )
 
         }
