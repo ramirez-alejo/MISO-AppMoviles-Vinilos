@@ -10,8 +10,8 @@ data class AlbumDto (
     var description: String,
     var genre: String,
     var recordLabel: String,
-    var performers: List<PerformerDto>? = listOf(),
-    var tracks: List<TracksDto>? = listOf()
+    var performers: List<PerformerDto> = listOf(),
+    var tracks: List<TracksDto> = listOf()
 )
 
 @Serializable

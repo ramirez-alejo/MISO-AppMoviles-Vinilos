@@ -37,6 +37,16 @@ class VinilosServiceAdapter constructor(
             Result.failure(e)
         }
 
+    override suspend fun getTracks(albumId: Int): Result<List<TracksDto>> =
+        try{
+            vinilosApi.getTracks(albumId).let {
+                Result.success(it)
+            }
+        } catch (e: Exception){
+            Result.failure(e)
+        }
+
+
     override suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto> =
         try{
             vinilosApi.addTrackToAlbum(albumId, track).let {

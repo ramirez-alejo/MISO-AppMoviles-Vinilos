@@ -8,9 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.model.repository.AlbumRepository
+import com.example.viniloscompose.model.repository.TrackRepository
 import kotlinx.coroutines.launch
 
-class AlbumSongFormViewModel(private val albumRepository: AlbumRepository) : ViewModel() {
+class AlbumSongFormViewModel(private val trackRepository: TrackRepository) : ViewModel() {
     var songName by mutableStateOf("")
         private set
     var songDuration by mutableStateOf("")
@@ -35,13 +36,14 @@ class AlbumSongFormViewModel(private val albumRepository: AlbumRepository) : Vie
     fun addTrackToAlbum(id: Int, callback: () -> Unit) {
         viewModelScope.launch {
             println("Try to add track: $songName to album :$songDuration")
-            val trackDto = albumRepository.addTrackToAlbum(
+            val trackDto = trackRepository.addTrackToAlbum(
                 id, CreateTrackDto(
                     name = songName,
                     duration = songDuration
                 )
             )
             if (trackDto != null) {
+                println("Added succesfully")
                 callback()
             }
         }

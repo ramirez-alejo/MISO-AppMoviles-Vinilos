@@ -124,26 +124,4 @@ class AlbumServiceMock : IAlbumService {
     override suspend fun getAlbums(): Result<List<AlbumDto>> {
         return Result.success(albumList)
     }
-
-    override suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto> {
-        val album = albumList.find { it.id == albumId }!!
-        val tracks = album.tracks!!.toMutableList()
-        val newTrack = TracksDto(
-            id = tracks.last().id + 1,
-            album = album,
-            name = track.name,
-            duration = track.duration
-        )
-        tracks.add(
-            newTrack
-        )
-        val newAlbum = album.copy(tracks = tracks.toList())
-        albumList.apply {
-            val index = indexOf(album)
-            set(index, newAlbum)
-        }
-        return Result.success(
-            newTrack
-        )
-    }
 }

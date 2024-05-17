@@ -5,6 +5,8 @@ import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.model.dto.TracksDto
 
 
-interface IAlbumService {
-    suspend fun getAlbums(): Result<List<AlbumDto>>
+interface ITrackService {
+    suspend fun getTracks(albumId: Int): Result<List<TracksDto>>
+    suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto>
+
 }

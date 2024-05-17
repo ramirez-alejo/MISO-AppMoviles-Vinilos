@@ -35,12 +35,4 @@ class AlbumRepository(
             cacheManager.setAlbums(albums)
         }
     }
-
-    suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): TracksDto? {
-        return if (!networkValidator.isNetworkAvailable()) {
-            return null
-        } else {
-            service.addTrackToAlbum(albumId, track).getOrThrow()
-        }
-    }
 }

@@ -27,6 +27,9 @@ interface IVinilosApi {
     @GET("collectors")
     suspend fun getCollectors(): List<CollectorDto>
 
+    @GET("albums/{albumId}/tracks")
+    suspend fun getTracks(@Path("albumId") albumId: Int): List<TracksDto>
+
     @POST("albums/{albumId}/tracks")
     @Headers(
         "Accept-Encoding: gzip,deflate",
