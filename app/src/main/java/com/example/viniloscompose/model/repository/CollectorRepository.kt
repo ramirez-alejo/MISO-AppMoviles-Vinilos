@@ -20,8 +20,8 @@ class CollectorRepository(
 
     suspend fun refreshData(): List<CollectorDto>{
         var collectors = getCollectors()
-        return if(collectors.isEmpty()){
-            if(!networkValidator.isNetworkAvailable()){
+        return collectors.ifEmpty {
+            if (!networkValidator.isNetworkAvailable()) {
                 println("DOESNT HAVE NETWORK AVAILABLE")
                 emptyList()
             } else {
@@ -29,7 +29,7 @@ class CollectorRepository(
                 setCollectors(collectors)
                 collectors
             }
-        } else collectors
+        }
     }
 
     private fun setCollectors(collectors: List<CollectorDto>){

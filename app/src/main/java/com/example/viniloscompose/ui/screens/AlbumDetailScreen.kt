@@ -234,7 +234,7 @@ fun AlbumDetailScreenBody(
                         }) {
 
                         Text(
-                            text = album.performers!!.joinToString { it.name },
+                            text = album.performers.joinToString { it.name },
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }

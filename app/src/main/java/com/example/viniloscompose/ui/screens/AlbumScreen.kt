@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -206,7 +205,7 @@ fun CardAlbum(item: AlbumDto,onCardClick: (Int) -> Unit) {
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = item.performers!!.joinToString { it.name },
+                    text = item.performers.joinToString { it.name },
                     style = MaterialTheme.typography.titleSmall,
                     modifier = Modifier.semantics {
                         contentDescription = ContentDescriptions.ALBUM_CARD_PERFORMER_NAME.value
