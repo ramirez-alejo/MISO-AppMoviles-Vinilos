@@ -10,16 +10,19 @@ import com.example.viniloscompose.model.service.ITrackService
 
 class FakeTracksService(private val amount: Int) : ITrackService {
 
-    var listOfTracks = listOf<TracksDto>()
+    private var listOfTracks = listOf<TracksDto>()
     override suspend fun getTracks(albumId: Int): Result<List<TracksDto>> {
+        val mutableList = listOfTracks.toMutableList()
         for (i in 0 until amount) {
-            listOfTracks = listOfTracks + TracksDto(
+            val newTrack = TracksDto(
                 id = i,
                 name = "Track: $i",
                 duration = "00:00"
             )
+            mutableList.add(newTrack)
+            //listOfTracks = listOfTracks +
         }
-        return Result.success(listOfTracks)
+        return Result.success(mutableList.toList())
     }
 
     override suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto> {
@@ -28,7 +31,9 @@ class FakeTracksService(private val amount: Int) : ITrackService {
             duration = track.duration,
             name = track.name
         )
-        listOfTracks += newTrack
+        val mutableList = listOfTracks.toMutableList()
+        mutableList.add(newTrack)
+        listOfTracks = mutableList
         return Result.success(newTrack)
     }
 
