@@ -8,21 +8,21 @@ sealed class BottomNavItem(
     var icon: Int,
     var rute: String
 ) {
-    object Albums :
+    data object Albums :
         BottomNavItem(
             "Álbumes",
             R.drawable.albunes_icon,
             AppScreens.AlbumScreen.route
         )
 
-    object Musicians :
+    data object Musicians :
         BottomNavItem(
             "Artistas",
             R.drawable.artista_vector,
             AppScreens.MusicianScreen.route
         )
 
-    object Collectors :
+    data object Collectors :
         BottomNavItem(
             "Coleccionistas",
             R.drawable.coleccionista_vector,

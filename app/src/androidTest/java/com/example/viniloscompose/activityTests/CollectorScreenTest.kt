@@ -7,9 +7,7 @@ import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.viniloscompose.MainActivity
-import com.example.viniloscompose.pageobjects.clickSectionNavigationBar
 import com.example.viniloscompose.pageobjects.login
-import com.example.viniloscompose.ui.shared.BottomNavigationSection
 import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.ui.shared.LoginType
 import org.junit.Rule

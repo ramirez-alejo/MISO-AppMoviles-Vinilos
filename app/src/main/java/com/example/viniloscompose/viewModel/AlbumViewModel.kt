@@ -17,7 +17,6 @@ class AlbumViewModel(private val albumRepository: AlbumRepository) : ViewModel()
     var state by mutableStateOf(AlbumState())
         private set
     private var response: List<AlbumDto> by mutableStateOf(listOf())
-        private set
 
     init {
         viewModelScope.launch {

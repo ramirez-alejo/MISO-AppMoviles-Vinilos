@@ -1,7 +1,5 @@
 package com.example.viniloscompose.pageobjects
 
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.test.SemanticsNodeInteraction
 import androidx.compose.ui.test.SemanticsNodeInteractionCollection
 import androidx.compose.ui.test.assertAny
@@ -16,7 +14,6 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.example.viniloscompose.MainActivity

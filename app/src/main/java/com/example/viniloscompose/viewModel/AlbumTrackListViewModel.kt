@@ -5,10 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.viniloscompose.model.dto.AlbumDto
-import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.model.dto.TracksDto
-import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.model.repository.TrackRepository
 import com.example.viniloscompose.viewModel.state.TrackState
 import kotlinx.coroutines.Dispatchers

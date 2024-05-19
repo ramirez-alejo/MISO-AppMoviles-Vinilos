@@ -1,10 +1,7 @@
 package com.example.viniloscompose.model.service.mocks
 
-import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.CreateTrackDto
-import com.example.viniloscompose.model.dto.PerformerDto
 import com.example.viniloscompose.model.dto.TracksDto
-import com.example.viniloscompose.model.service.IAlbumService
 import com.example.viniloscompose.model.service.ITrackService
 
 class TrackServiceMock : ITrackService {

@@ -8,7 +8,6 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import java.util.concurrent.ThreadLocalRandom
 
 class FakeAlbumService(private val amount: Int): IAlbumService {
     override suspend fun getAlbums(): Result<List<AlbumDto>> {

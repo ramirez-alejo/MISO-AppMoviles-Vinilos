@@ -12,8 +12,7 @@ import com.google.gson.Gson
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class CacheManager(context: Context) : ICacheManager{
-    private val context = context
+class CacheManager(private val context: Context) : ICacheManager{
     companion object {
         const val ALBUMS_SPREFS = "albums"
         const val MUSICIANS_SPREFS = "musicians"

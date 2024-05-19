@@ -21,7 +21,7 @@ class MusicianRepository (
     // Método para refrescar la lista de músicos
     suspend fun refreshData(): List<MusicianDto>{
         var musicians = getMusicians()
-        return if(musicians.isNullOrEmpty()){
+        return if(musicians.isEmpty()){
             if(!networkValidator.isNetworkAvailable()){
                 emptyList()
             } else {
