@@ -8,7 +8,9 @@ data class CollectorDto(
     val name: String,
     val telephone: String,
     val email: String,
-    val comments: List<CommentDto>
+    val comments: List<CommentDto>,
+    var favoritePerformers: List<FavoritePerformerDto>  = emptyList(),
+    var collectorAlbums: List<CollectorAlbumDto>  = emptyList()
 )
 
 @Serializable
@@ -16,4 +18,14 @@ data class CommentDto(
     val id: Int,
     val description: String,
     val rating: Int
+)
+
+@Serializable
+data class  FavoritePerformerDto(
+    val id: Int
+)
+
+@Serializable
+data class  CollectorAlbumDto(
+    val id: Int
 )

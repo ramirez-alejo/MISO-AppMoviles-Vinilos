@@ -9,50 +9,50 @@ import com.example.viniloscompose.model.dto.TracksDto
 
 class VinilosServiceAdapter constructor(
     private val vinilosApi: IVinilosApi = IVinilosApi.getInstace()
-): IVinilosServiceAdapter {
-    override suspend fun getMusicians(): Result<List<MusicianDto>>  =
-    try{
-        vinilosApi.getMusicians().let {
-            Result.success(it)
-        }
-    } catch (e: Exception){
-        Result.failure(e)
-    }
-
-    override suspend fun getAlbums() : Result<List<AlbumDto>> =
-        try{
-            vinilosApi.getAlbums().let {
+) : IVinilosServiceAdapter {
+    override suspend fun getMusicians(): Result<List<MusicianDto>> =
+        try {
+            vinilosApi.getMusicians().let {
                 Result.success(it)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
 
-    override suspend fun getCollectors() : Result<List<CollectorDto>> =
-        try{
+    override suspend fun getAlbums(): Result<List<AlbumDto>> =
+        try {
+            vinilosApi.getAlbums().let {
+                Result.success(it)
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+
+    override suspend fun getCollectors(): Result<List<CollectorDto>> =
+        try {
             vinilosApi.getCollectors().let {
                 Result.success(it)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
 
     override suspend fun getTracks(albumId: Int): Result<List<TracksDto>> =
-        try{
+        try {
             vinilosApi.getTracks(albumId).let {
                 Result.success(it)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
 
 
     override suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto> =
-        try{
+        try {
             vinilosApi.addTrackToAlbum(albumId, track).let {
                 Result.success(it)
             }
-        } catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure(e)
         }
 

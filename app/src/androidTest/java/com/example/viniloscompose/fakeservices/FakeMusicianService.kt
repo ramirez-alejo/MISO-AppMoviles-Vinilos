@@ -13,7 +13,7 @@ class FakeMusicianService(private val amount: Int) : IMusicianService {
                 name = "Musician: ${i}",
                 albums =  emptyList(),
                 description = "",
-                birthDate = ""
+                birthDate = "1948-07-16T05:00:00.000Z"
             )
         }
         return Result.success(listOfMusicians)
