@@ -1,9 +1,7 @@
 package com.example.viniloscompose.model.repository
 
-import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.model.dto.TracksDto
-import com.example.viniloscompose.model.service.IAlbumService
 import com.example.viniloscompose.model.service.ITrackService
 import com.example.viniloscompose.utils.cache.CacheManager
 import com.example.viniloscompose.utils.cache.ICacheManager

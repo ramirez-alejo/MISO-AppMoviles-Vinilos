@@ -7,7 +7,7 @@ import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.model.dto.MusicianDto
 import com.example.viniloscompose.model.dto.TracksDto
 
-class VinilosServiceAdapter constructor(
+class VinilosServiceAdapter (
     private val vinilosApi: IVinilosApi = IVinilosApi.getInstace()
 ) : IVinilosServiceAdapter {
     override suspend fun getMusicians(): Result<List<MusicianDto>> =

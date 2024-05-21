@@ -1,9 +1,6 @@
 package com.example.viniloscompose.model.service.mocks
 
-import com.example.viniloscompose.model.dto.AlbumDto
 import com.example.viniloscompose.model.dto.CollectorDto
-import com.example.viniloscompose.model.dto.CommentDto
-import com.example.viniloscompose.model.dto.PerformerDto
 import com.example.viniloscompose.model.service.ICollectorService
 
 class CollectorServiceMock : ICollectorService {
