@@ -12,5 +12,7 @@ sealed class AppScreens (val route: String) {
 
     data object  CollectorScreen: AppScreens("collectors_screen")
 
+    data object  CollectorDetailScreen: AppScreens("collectors_detail_screen")
+
 
 }

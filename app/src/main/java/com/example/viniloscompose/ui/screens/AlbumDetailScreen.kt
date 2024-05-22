@@ -453,7 +453,7 @@ private fun AlbumCreateButton(
                     tint = MaterialTheme.colorScheme.primary
                 )
                 Text(
-                    text = stringResource(id = R.string.agregar_album),
+                    text = stringResource(id = R.string.agregar_album_cancion_form_title),
                     style = MaterialTheme.typography.labelMedium,
                     color = MaterialTheme.colorScheme.primary
                 )

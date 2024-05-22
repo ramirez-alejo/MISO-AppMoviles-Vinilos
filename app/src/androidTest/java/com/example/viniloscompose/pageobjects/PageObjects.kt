@@ -116,3 +116,8 @@ fun clickContentDescription(
 ) {
     composeTestRule.onNodeWithContentDescription(description.value).performClick()
 }
+
+fun  clickAlbumsTab(composeTestRule: ComposeContentTestRule){
+    composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_DETAIL_ALBUMS_TAB.value)
+        .performClick()
+}

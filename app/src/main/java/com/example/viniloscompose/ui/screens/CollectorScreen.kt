@@ -70,7 +70,8 @@ import com.example.viniloscompose.viewModel.CollectorViewModel
 fun CollectorScreen(
     onNavigate: (String) -> Unit,
     isSelected: (String) -> Boolean,
-    collectorRepository: CollectorRepository
+    collectorRepository: CollectorRepository,
+    onCollectorClick: (Int) -> Unit
 ) {
     val collectorViewModel = remember { CollectorViewModel(collectorRepository) }
     var query by remember { mutableStateOf("") }
@@ -125,7 +126,7 @@ fun CollectorScreen(
                     TitleCollector()
                     Spacer(modifier = Modifier.height(12.dp))
                     val filteredCollectors = collectorViewModel.getFilteredCollectors(query)
-                    BodyCollectorContent(filteredCollectors)
+                    BodyCollectorContent(filteredCollectors,onCollectorClick)
                 }
             }
         }
@@ -191,7 +192,7 @@ fun SearchBarCollector(onFilter: (String) -> Unit) {
 }
 
 @Composable
-fun BodyCollectorContent(collectors: List<CollectorDto>) {
+fun BodyCollectorContent(collectors: List<CollectorDto>, onCollectorClick: (Int) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -202,19 +203,20 @@ fun BodyCollectorContent(collectors: List<CollectorDto>) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = collectors) { _, item ->
-            CardCollector(item)
+            CardCollector(item,onCollectorClick)
         }
     }
 }
 
 
 @Composable
-fun CardCollector(item: CollectorDto) {
+fun CardCollector(item: CollectorDto, onCollectorClick: (Int) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(vertical = 4.dp)
-            .semantics { contentDescription = ContentDescriptions.COLLECTOR_CARD.value }
+            .semantics { contentDescription = ContentDescriptions.COLLECTOR_CARD.value },
+        onClick = { onCollectorClick(item.id) },
     ) {
         Row(
             modifier = Modifier
@@ -256,7 +258,9 @@ fun CardCollector(item: CollectorDto) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
-                    .clickable { }
+                    .clickable {
+                        onCollectorClick(item.id)
+                    }
             )
 
         }
@@ -275,11 +279,12 @@ fun DefaultCollectorScreenPreview() {
             CollectorScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                CollectorRepository(
+                collectorRepository =  CollectorRepository(
                     cacheManager,
                     networkValidator,
                     CollectorServiceMock()
-                )
+                ),
+                onCollectorClick = { id -> navController.navigate(AppScreens.CollectorDetailScreen.route+"/$id")}
             )
         }
     }

@@ -32,9 +32,14 @@ class CollectorRepository(
         }
     }
 
+
     private fun setCollectors(collectors: List<CollectorDto>){
         if(!cacheManager.hasCollection(CacheManager.COLLECTORS_SPREFS)){
             cacheManager.setCollectors(collectors)
         }
+    }
+
+    fun  getCollector(collectorId:Int):CollectorDto{
+        return cacheManager.getCollectors().first { it.id == collectorId }
     }
 }

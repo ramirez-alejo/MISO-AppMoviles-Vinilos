@@ -3,7 +3,6 @@ package com.example.viniloscompose.composeTests
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.test.assertAll
 import androidx.compose.ui.test.assertCountEquals
-import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
@@ -15,6 +14,7 @@ import androidx.navigation.testing.TestNavHostController
 import com.example.viniloscompose.fakeservices.FakeCollectorsService
 import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.pageobjects.searchForAllNodesWithDescription
+import com.example.viniloscompose.ui.navigation.AppScreens
 import com.example.viniloscompose.ui.navigation.isSelectedBarItem
 import com.example.viniloscompose.ui.screens.CollectorScreen
 import com.example.viniloscompose.ui.shared.ContentDescriptions
@@ -47,7 +47,8 @@ class CollectorScreenTest {
                 CollectorScreen(
                     onNavigate = { dest -> navController.navigate(dest) },
                     isSelected = { dest -> isSelected(dest) },
-                    collectorRepository = repository
+                    collectorRepository = repository,
+                    onCollectorClick =  { id -> navController.navigate(AppScreens.CollectorDetailScreen.route + "/$id") }
                 )
             }
         }
@@ -75,20 +76,15 @@ class CollectorScreenTest {
                 .isDisplayed()
         }
         searchForAllNodesWithDescription(composeTestRule, ContentDescriptions.COLLECTOR_CARD).assertAll(
-            hasAnyChild(
                 hasText(
                     text = "Collector",
                     substring = true,
                     ignoreCase = true
-                )
-            ).and(
-                hasAnyChild(
+
+                ).and(
                     hasContentDescription(ContentDescriptions.COLLECTOR_CARD_IMAGE.value)
-                )
             ).and(
-                hasAnyChild(
                     hasContentDescription(ContentDescriptions.COLLECTOR_CARD_NAME.value)
-                )
             )
         )
     }
