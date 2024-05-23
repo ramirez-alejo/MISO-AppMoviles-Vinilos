@@ -489,6 +489,7 @@ private fun CardTrack(track: TracksDto) {
                         contentDescription = null,
                         modifier = Modifier
                             .size(20.dp)
+                            .semantics {  contentDescription = ContentDescriptions.ALBUM_PLAY_TRACK.value + track.name }
                             .clickable { }
                             .border(1.dp, MaterialTheme.colorScheme.inverseSurface, CircleShape))
                 }
@@ -510,6 +511,7 @@ private fun CardTrack(track: TracksDto) {
                 contentDescription = null,
                 modifier = Modifier
                     .size(20.dp)
+                    .semantics {  contentDescription = ContentDescriptions.ALBUM_FAVORITE_TRACK.value + track.name }
                     .clickable { })
         }
 

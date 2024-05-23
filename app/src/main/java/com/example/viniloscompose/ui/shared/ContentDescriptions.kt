@@ -41,6 +41,8 @@ enum class ContentDescriptions(val value: String) {
     ALBUM_CARD("AlbumCard"),
     ALBUM_CARD_IMAGE("AlbumCardImage"),
     ALBUM_CARD_PERFORMER_NAME("AlbumCardPerformerName"),
+    ALBUM_PLAY_TRACK("AlbumPlayTrack"),
+    ALBUM_FAVORITE_TRACK("AddTrackToFavorites"),
     COLLECTOR_SCREEN("CollectorScreen"),
     COLLECTOR_SCREEN_SEARCHBAR("CollectorScreenSearchBar"),
     COLLECTOR_SCREEN_TITLE("CollectorScreenTitle"),
