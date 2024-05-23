@@ -98,8 +98,11 @@ private fun TopBar(popBackStackAction: () -> Unit) {
             },
             modifier = Modifier
                 .padding(8.dp)
-                .size(24.dp)
+                .size(28.dp)
                 .align(Alignment.TopStart)
+                .semantics {
+                    contentDescription = ContentDescriptions.MUSICIAN_DETAIL_RETURN_ACCION.value
+                }
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -244,7 +247,11 @@ private fun CardAlbumDetail(item: MusicianAlbumDetailDto, onAlbumClick: (Int) ->
                 Text(
                     text = item.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.semantics {
+                        contentDescription =
+                            ContentDescriptions.ALBUM_DETAIL_TITLE.value + item.name
+                    }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }

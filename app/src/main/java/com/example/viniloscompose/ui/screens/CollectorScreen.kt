@@ -126,7 +126,7 @@ fun CollectorScreen(
                     TitleCollector()
                     Spacer(modifier = Modifier.height(12.dp))
                     val filteredCollectors = collectorViewModel.getFilteredCollectors(query)
-                    BodyCollectorContent(filteredCollectors,onCollectorClick)
+                    BodyCollectorContent(filteredCollectors, onCollectorClick)
                 }
             }
         }
@@ -203,7 +203,7 @@ fun BodyCollectorContent(collectors: List<CollectorDto>, onCollectorClick: (Int)
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = collectors) { _, item ->
-            CardCollector(item,onCollectorClick)
+            CardCollector(item, onCollectorClick)
         }
     }
 }
@@ -245,7 +245,9 @@ fun CardCollector(item: CollectorDto, onCollectorClick: (Int) -> Unit) {
                     Text(
                         text = item.name,
                         style = MaterialTheme.typography.titleMedium,
-                        modifier = Modifier.semantics { contentDescription = ContentDescriptions.COLLECTOR_CARD_NAME.value }
+                        modifier = Modifier.semantics {
+                            contentDescription = ContentDescriptions.COLLECTOR_CARD_NAME.value
+                        }
                     )
                     Text(
                         text = stringResource(id = R.string.coleccionista),
@@ -260,6 +262,9 @@ fun CardCollector(item: CollectorDto, onCollectorClick: (Int) -> Unit) {
                     .size(20.dp)
                     .clickable {
                         onCollectorClick(item.id)
+                    }
+                    .semantics {
+                        contentDescription = ContentDescriptions.COLLECTOR_VIEW_DETAIL.value
                     }
             )
 
@@ -279,12 +284,12 @@ fun DefaultCollectorScreenPreview() {
             CollectorScreen(
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
-                collectorRepository =  CollectorRepository(
+                collectorRepository = CollectorRepository(
                     cacheManager,
                     networkValidator,
                     CollectorServiceMock()
                 ),
-                onCollectorClick = { id -> navController.navigate(AppScreens.CollectorDetailScreen.route+"/$id")}
+                onCollectorClick = { id -> navController.navigate(AppScreens.CollectorDetailScreen.route + "/$id") }
             )
         }
     }

@@ -52,6 +52,7 @@ enum class ContentDescriptions(val value: String) {
     COLLECTOR_DETAIL_INFORMATION("CollectorDetailInformation"),
     COLLECTOR_DETAIL_ALBUMS_TAB("CollectorDetailTabÁlbumes"),
     COLLECTOR_DETAIL_MUSICIANS_TAB("CollectorDetailTabArtistas"),
+    COLLECTOR_VIEW_DETAIL("ViewCollectorDetails"),
     INICIO_SCREEN("InicioScreen"),
     MUSICIAN_SCREEN("MusicianScreen"),
     MUSICIANS_SCREEN_SEARCHBAR("MusicianSearchBar"),
@@ -59,4 +60,6 @@ enum class ContentDescriptions(val value: String) {
     MUSICIANS_SCREEN_BODY("MusicianScreenBody"),
     MUSICIAN_CARD("MusicianCard"),
     MUSICIAN_CARD_IMAGE("MusicianCardImage"),
+    MUSICIAN_DETAIL_RETURN_ACCION("ReturnToMusicianScreen"),
+    MUSICIAN_VIEW_DETAIL("ViewMusicianDetails")
 }

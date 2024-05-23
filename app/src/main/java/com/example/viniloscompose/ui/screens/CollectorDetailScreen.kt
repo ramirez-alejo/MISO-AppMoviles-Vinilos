@@ -80,7 +80,12 @@ fun CollectorDetailScreen(
     onMusicianClick: (Int) -> Unit
 ) {
     val collectorDetailViewModel = remember {
-        CollectorDetailViewModel(collectorRepository,albumRepository,musicianRepository,collectorId!!)
+        CollectorDetailViewModel(
+            collectorRepository,
+            albumRepository,
+            musicianRepository,
+            collectorId!!
+        )
     }
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     val state = collectorDetailViewModel.state
@@ -95,15 +100,25 @@ fun CollectorDetailScreen(
             contentDescription = ContentDescriptions.COLLECTOR_DETAIL_SCREEN.value
         }
     ) {
-        when (state){
+        when (state) {
             is CollectorDetailState.Loading -> {
                 CollectorScreenLoanding()
             }
-            is CollectorDetailState.Success ->{
-                CollectorDetailBody(state.collector, state.albums, state.favoriteMusicians, selectedTabIndex,{index ->
-                    selectedTabIndex = index} , onAlbumClick,onMusicianClick)
+
+            is CollectorDetailState.Success -> {
+                CollectorDetailBody(
+                    state.collector,
+                    state.albums,
+                    state.favoriteMusicians,
+                    selectedTabIndex,
+                    { index ->
+                        selectedTabIndex = index
+                    },
+                    onAlbumClick,
+                    onMusicianClick)
             }
-            is CollectorDetailState.Error ->{
+
+            is CollectorDetailState.Error -> {
                 Box(
                     modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
                 ) {
@@ -124,23 +139,40 @@ fun CollectorDetailScreen(
 }
 
 @Composable
-private  fun CollectorDetailBody(collector: CollectorDto,albums: List<AlbumDto>,favoriteMusicians: List<MusicianDto>,selectedTabIndex: Int,onTabSelected: (Int) -> Unit,onAlbumClick: (Int) -> Unit,onMusicianClick: (Int) -> Unit){
+private fun CollectorDetailBody(
+    collector: CollectorDto,
+    albums: List<AlbumDto>,
+    favoriteMusicians: List<MusicianDto>,
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    onAlbumClick: (Int) -> Unit,
+    onMusicianClick: (Int) -> Unit
+) {
     Column {
         Spacer(modifier = Modifier.size(40.dp))
         CollectorInformationContent(collector)
         Spacer(modifier = Modifier.height(16.dp))
-        CollectorTabs(selectedTabIndex,onTabSelected,albums,favoriteMusicians,onAlbumClick,onMusicianClick)
+        CollectorTabs(
+            selectedTabIndex,
+            onTabSelected,
+            albums,
+            favoriteMusicians,
+            onAlbumClick,
+            onMusicianClick
+        )
     }
 
 }
 
 
 @Composable
-private  fun CollectorInformationContent(collector: CollectorDto){
+private fun CollectorInformationContent(collector: CollectorDto) {
     Column(
         modifier = Modifier
             .padding(horizontal = 16.dp)
-            .semantics {  contentDescription = ContentDescriptions.COLLECTOR_DETAIL_INFORMATION.value }
+            .semantics {
+                contentDescription = ContentDescriptions.COLLECTOR_DETAIL_INFORMATION.value
+            }
     ) {
         AsyncImage(
             model = R.drawable.collector_icon,
@@ -162,12 +194,12 @@ private  fun CollectorInformationContent(collector: CollectorDto){
                 verticalAlignment = Alignment.CenterVertically,
 
 
-            ) {
+                ) {
                 Icon(
                     imageVector = Icons.Outlined.Phone,
                     contentDescription = null,
                     tint = Color(0x75000000),
-                    modifier =  Modifier.size(10.5.dp)
+                    modifier = Modifier.size(10.5.dp)
                 )
                 Spacer(modifier = Modifier.width(5.dp))
                 Text(
@@ -179,7 +211,7 @@ private  fun CollectorInformationContent(collector: CollectorDto){
                     imageVector = Icons.Outlined.MailOutline,
                     contentDescription = null,
                     tint = Color(0x75000000),
-                    modifier =  Modifier.size(10.5.dp)
+                    modifier = Modifier.size(10.5.dp)
                 )
                 Spacer(modifier = Modifier.width(3.dp))
                 Text(
@@ -193,9 +225,16 @@ private  fun CollectorInformationContent(collector: CollectorDto){
 
 
 @Composable
-private  fun  CollectorTabs(selectedTabIndex: Int,onTabSelected: (Int) -> Unit,albums: List<AlbumDto>,favoriteMusicians: List<MusicianDto>,onAlbumClick: (Int) -> Unit,onMusicianClick: (Int) -> Unit){
+private fun CollectorTabs(
+    selectedTabIndex: Int,
+    onTabSelected: (Int) -> Unit,
+    albums: List<AlbumDto>,
+    favoriteMusicians: List<MusicianDto>,
+    onAlbumClick: (Int) -> Unit,
+    onMusicianClick: (Int) -> Unit
+) {
     // Barra de Pestañas
-    val tabs = listOf("Artistas","Álbumes")
+    val tabs = listOf("Artistas", "Álbumes")
 
     TabRow(
         selectedTabIndex = selectedTabIndex
@@ -203,23 +242,23 @@ private  fun  CollectorTabs(selectedTabIndex: Int,onTabSelected: (Int) -> Unit,a
         tabs.forEachIndexed { index, title ->
             Tab(
                 selected = selectedTabIndex == index,
-                onClick = { onTabSelected(index)},
+                onClick = { onTabSelected(index) },
                 text = { Text(text = title) },
-                modifier =Modifier.semantics { contentDescription = "CollectorDetailTab$title" }
+                modifier = Modifier.semantics { contentDescription = "CollectorDetailTab$title" }
             )
         }
     }
 
     // Contenido de la Pestaña Seleccionada
     when (selectedTabIndex) {
-        0 -> FavoriteMusiciansTabContent(favoriteMusicians,onMusicianClick)
-        1 -> AlbumsTabContent(albums,onAlbumClick)
+        0 -> FavoriteMusiciansTabContent(favoriteMusicians, onMusicianClick)
+        1 -> AlbumsTabContent(albums, onAlbumClick)
 
     }
 }
 
 @Composable
-fun AlbumsTabContent(albums: List<AlbumDto>,onAlbumClick: (Int) -> Unit) {
+fun AlbumsTabContent(albums: List<AlbumDto>, onAlbumClick: (Int) -> Unit) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -269,7 +308,11 @@ private fun CardCollectorAlbumDetail(item: AlbumDto, onAlbumClick: (Int) -> Unit
                 Text(
                     text = item.name,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    color = Color.Black,
+                    modifier = Modifier.semantics {
+                        contentDescription =
+                            ContentDescriptions.ALBUM_DETAIL_TITLE.value + item.name
+                    }
                 )
                 Spacer(modifier = Modifier.height(4.dp))
             }
@@ -280,7 +323,10 @@ private fun CardCollectorAlbumDetail(item: AlbumDto, onAlbumClick: (Int) -> Unit
 
 
 @Composable
-fun FavoriteMusiciansTabContent(favoriteMusicians: List<MusicianDto>,onMusicianClick: (Int) -> Unit) {
+fun FavoriteMusiciansTabContent(
+    favoriteMusicians: List<MusicianDto>,
+    onMusicianClick: (Int) -> Unit
+) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -290,7 +336,7 @@ fun FavoriteMusiciansTabContent(favoriteMusicians: List<MusicianDto>,onMusicianC
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = favoriteMusicians) { _, item ->
-            CardColletorMusician(item,onMusicianClick)
+            CardColletorMusician(item, onMusicianClick)
         }
     }
 }
@@ -337,12 +383,14 @@ private fun CardColletorMusician(item: MusicianDto, onCardClick: (Int) -> Unit) 
 
                     )
                     Text(
-                        text = stringResource(id = R.string.fecha_nacimiento) + convertirFormatoFecha(item.birthDate),
+                        text = stringResource(id = R.string.fecha_nacimiento) + convertirFormatoFecha(
+                            item.birthDate
+                        ),
                         style = MaterialTheme.typography.bodySmall,
                         color = Color(0xFF1D1B20)
                     )
                     Text(
-                        text =  item.description,
+                        text = item.description,
                         style = MaterialTheme.typography.bodySmall,
                         color = Color(0xFF1D1B20)
                     )
@@ -364,7 +412,7 @@ private fun CardColletorMusician(item: MusicianDto, onCardClick: (Int) -> Unit) 
 }
 
 @Composable
-private fun CollectorScreenLoanding(){
+private fun CollectorScreenLoanding() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -387,7 +435,7 @@ private fun TopBar(popBackStackAction: () -> Unit) {
             },
             modifier = Modifier
                 .padding(8.dp)
-                .size(24.dp)
+                .size(28.dp)
                 .align(Alignment.TopStart)
         ) {
             Icon(

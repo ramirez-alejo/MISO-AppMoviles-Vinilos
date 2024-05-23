@@ -108,7 +108,7 @@ fun MusicianScreen(
                     TitleMusician()
                     Spacer(modifier = Modifier.height(12.dp))
                     val filteredMusicians = musicianViewModel.getFilteredMusicians(query)
-                    BodyMusicianContent(filteredMusicians,onCardClick)
+                    BodyMusicianContent(filteredMusicians, onCardClick)
                 }
             }
         }
@@ -130,7 +130,7 @@ fun BodyMusicianContent(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         itemsIndexed(items = musicians) { _, item ->
-            CardMusician(item,onCardClick)
+            CardMusician(item, onCardClick)
         }
     }
 }
@@ -205,6 +205,9 @@ fun CardMusician(item: MusicianDto, onCardClick: (Int) -> Unit) {
                     .clickable {
                         onCardClick(item.id)
                     }
+                    .semantics {
+                        contentDescription = ContentDescriptions.MUSICIAN_VIEW_DETAIL.value
+                    }
             )
 
         }
@@ -267,7 +270,7 @@ fun DefaulMusiciatPreview() {
                 onNavigate = { dest -> navController.navigate(dest) },
                 isSelected = isSelectedBarItem(navController),
                 MusicianRepository(cacheManager, networkValidator, MusicianServiceMock()),
-                onCardClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route+"/$id")}
+                onCardClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route + "/$id") }
             )
         }
     }

@@ -195,7 +195,7 @@ fun AlbumDetailScreenBody(
                     },
                         modifier = Modifier
                             .padding(top = 32.dp, start = 16.dp)
-                            .size(24.dp)
+                            .size(28.dp)
                             .semantics {
                                 contentDescription = ContentDescriptions.ALBUM_DETAIL_BACK.value
                             }) {
