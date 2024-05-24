@@ -41,6 +41,8 @@ enum class ContentDescriptions(val value: String) {
     ALBUM_CARD("AlbumCard"),
     ALBUM_CARD_IMAGE("AlbumCardImage"),
     ALBUM_CARD_PERFORMER_NAME("AlbumCardPerformerName"),
+    ALBUM_PLAY_TRACK("AlbumPlayTrack"),
+    ALBUM_FAVORITE_TRACK("AddTrackToFavorites"),
     COLLECTOR_SCREEN("CollectorScreen"),
     COLLECTOR_SCREEN_SEARCHBAR("CollectorScreenSearchBar"),
     COLLECTOR_SCREEN_TITLE("CollectorScreenTitle"),
@@ -52,6 +54,7 @@ enum class ContentDescriptions(val value: String) {
     COLLECTOR_DETAIL_INFORMATION("CollectorDetailInformation"),
     COLLECTOR_DETAIL_ALBUMS_TAB("CollectorDetailTabÁlbumes"),
     COLLECTOR_DETAIL_MUSICIANS_TAB("CollectorDetailTabArtistas"),
+    COLLECTOR_VIEW_DETAIL("ViewCollectorDetails"),
     INICIO_SCREEN("InicioScreen"),
     MUSICIAN_SCREEN("MusicianScreen"),
     MUSICIANS_SCREEN_SEARCHBAR("MusicianSearchBar"),
@@ -59,4 +62,6 @@ enum class ContentDescriptions(val value: String) {
     MUSICIANS_SCREEN_BODY("MusicianScreenBody"),
     MUSICIAN_CARD("MusicianCard"),
     MUSICIAN_CARD_IMAGE("MusicianCardImage"),
+    MUSICIAN_DETAIL_RETURN_ACCION("ReturnToMusicianScreen"),
+    MUSICIAN_VIEW_DETAIL("ViewMusicianDetails")
 }
