@@ -39,6 +39,9 @@ interface IVinilosApi {
      )
     suspend fun addTrackToAlbum(@Path("albumId") albumId: Int, @Body track: CreateTrackDto): TracksDto
 
+    @POST("collectors/{collectorId}/albums/{albumId}")
+    suspend fun addAlbumToCollector(@Path("collectorId") collectorId: Int, @Path("albumId") albumId: Int)
+
     companion object {
         private var vinilosApi: IVinilosApi? = null
         fun getInstace(): IVinilosApi {

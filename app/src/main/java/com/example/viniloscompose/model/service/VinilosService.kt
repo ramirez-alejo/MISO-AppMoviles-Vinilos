@@ -15,4 +15,5 @@ class VinilosService: IAlbumService, IMusicianService, ICollectorService, ITrack
 
     override suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto> = vinilosServiceAdapter.addTrackToAlbum(albumId, track)
     override suspend fun getCollectors(): Result<List<CollectorDto>> = vinilosServiceAdapter.getCollectors()
+    override suspend fun addAlbumToCollector(collectorId: Int, albumId: Int) = vinilosServiceAdapter.addAlbumToCollector(collectorId, albumId)
 }

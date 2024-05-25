@@ -12,4 +12,6 @@ interface IVinilosServiceAdapter {
     suspend fun getCollectors() : Result<List<CollectorDto>>
     suspend fun getTracks(albumId: Int): Result<List<TracksDto>>
     suspend fun addTrackToAlbum(albumId: Int, track: CreateTrackDto): Result<TracksDto>
+
+    suspend fun addAlbumToCollector(collectorId: Int, albumId: Int): Unit
 }

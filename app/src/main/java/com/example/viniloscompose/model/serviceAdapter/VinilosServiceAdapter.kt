@@ -56,4 +56,8 @@ class VinilosServiceAdapter (
             Result.failure(e)
         }
 
+    override suspend fun addAlbumToCollector(collectorId: Int, albumId: Int) {
+        vinilosApi.addAlbumToCollector(collectorId, albumId)
+    }
+
 }

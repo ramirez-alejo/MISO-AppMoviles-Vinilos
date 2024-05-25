@@ -31,4 +31,8 @@ class CollectorServiceMock : ICollectorService {
             )
         )
     }
+
+    override suspend fun addAlbumToCollector(collectorId: Int, albumId: Int) {
+        // Do nothing
+    }
 }
