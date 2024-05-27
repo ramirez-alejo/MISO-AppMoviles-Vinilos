@@ -15,9 +15,11 @@ import androidx.navigation.navArgument
 import com.example.viniloscompose.model.repository.AlbumRepository
 import com.example.viniloscompose.model.repository.CollectorRepository
 import com.example.viniloscompose.model.repository.MusicianRepository
+import com.example.viniloscompose.model.repository.TrackRepository
 import com.example.viniloscompose.model.service.VinilosService
 import com.example.viniloscompose.ui.screens.AlbumDetailScreen
 import com.example.viniloscompose.ui.screens.AlbumScreen
+import com.example.viniloscompose.ui.screens.CollectorDetailScreen
 import com.example.viniloscompose.ui.screens.CollectorScreen
 import com.example.viniloscompose.ui.screens.InicioScreen
 import com.example.viniloscompose.ui.screens.MusicianDetailScreen
@@ -33,6 +35,7 @@ fun AppNavigation() {
     val networkValidator = NetworkValidator(application)
     val service = remember { VinilosService() }
     val albumRepository = remember { AlbumRepository(cacheManager, networkValidator, service) }
+    val trackRepository = remember { TrackRepository(cacheManager, networkValidator, service) }
     val musicianRepository =
         remember { MusicianRepository(cacheManager, networkValidator, service) }
     val collectorRepository =
@@ -51,7 +54,7 @@ fun AppNavigation() {
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = isSelectedBarItem(navController),
                 musicianRepository = musicianRepository,
-                onCardClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route+"/$id")}
+                onCardClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route + "/$id") }
             )
         }
         composable(route = AppScreens.AlbumScreen.route) {
@@ -59,14 +62,15 @@ fun AppNavigation() {
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = isSelectedBarItem(navController),
                 albumRepository = albumRepository,
-                onCardClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route+"/$id")}
+                onCardClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route + "/$id") }
             )
         }
         composable(route = AppScreens.CollectorScreen.route) {
             CollectorScreen(
                 onNavigate = { destination -> navController.navigate(destination) },
                 isSelected = isSelectedBarItem(navController),
-                collectorRepository = collectorRepository
+                collectorRepository = collectorRepository,
+                onCollectorClick = { id -> navController.navigate(AppScreens.CollectorDetailScreen.route + "/$id") }
             )
         }
         composable(route = AppScreens.MusicianDetailScreen.route + "/{idMusician}",
@@ -75,14 +79,14 @@ fun AppNavigation() {
                     type = NavType.IntType
                 }
             )
-        ) {idMusician ->
+        ) { idMusician ->
             MusicianDetailScreen(
                 musicianId = idMusician.arguments?.getInt("idMusician"),
                 musicianRepository = musicianRepository,
                 onNavigate = { destination -> navController.navigate(destination) },
-                isSelected = {rute -> AppScreens.MusicianScreen.route == rute},
+                isSelected = { rute -> AppScreens.MusicianScreen.route == rute },
                 popBackStackAction = { navController.popBackStack() },
-                onAlbumClick =  { id -> navController.navigate(AppScreens.AlbumDetailScreen.route+"/$id")}
+                onAlbumClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route + "/$id") }
 
             )
 
@@ -93,16 +97,35 @@ fun AppNavigation() {
                     type = NavType.IntType
                 }
             )
-        ) {idMusician ->
+        ) { idMusician ->
             AlbumDetailScreen(
                 albumId = idMusician.arguments?.getInt("idAlbum"),
                 albumRepository = albumRepository,
                 onNavigate = { destination -> navController.navigate(destination) },
-                isSelected = {rute -> AppScreens.AlbumScreen.route == rute},
-                popBackStackAction = { navController.popBackStack() }
-
+                isSelected = { rute -> AppScreens.AlbumScreen.route == rute },
+                popBackStackAction = { navController.popBackStack() },
+                trackRepository = trackRepository
             )
 
+        }
+        composable(route = AppScreens.CollectorDetailScreen.route + "/{idCollector}",
+            arguments = listOf(
+                navArgument(name = "idCollector") {
+                    type = NavType.IntType
+                }
+            )
+        ) { idCollector ->
+            CollectorDetailScreen(
+                collectorId = idCollector.arguments?.getInt("idCollector"),
+                collectorRepository = collectorRepository,
+                albumRepository = albumRepository,
+                musicianRepository = musicianRepository,
+                onNavigate = { destination -> navController.navigate(destination) },
+                isSelected = { rute -> AppScreens.CollectorScreen.route == rute },
+                popBackStackAction = { navController.popBackStack() },
+                onAlbumClick = { id -> navController.navigate(AppScreens.AlbumDetailScreen.route + "/$id") },
+                onMusicianClick = { id -> navController.navigate(AppScreens.MusicianDetailScreen.route + "/$id") }
+            )
         }
 
     }

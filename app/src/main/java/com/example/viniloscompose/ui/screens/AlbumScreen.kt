@@ -25,7 +25,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -95,23 +94,6 @@ fun AlbumScreen(
             return@Scaffold
         }
 
-        if (state.error != null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = R.string.error.toString(),
-                    style = TextStyle(
-                        fontSize = 20.sp,
-                        color = contentColorFor(Color.White),
-                        fontFamily = FontFamily.Default,
-                        textAlign = TextAlign.Center
-                    )
-                )
-            }
-            return@Scaffold
-        }
         Column(
             modifier = Modifier
                 .fillMaxSize()

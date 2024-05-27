@@ -14,8 +14,10 @@ import androidx.compose.ui.test.onLast
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import com.example.viniloscompose.MainActivity
+import com.example.viniloscompose.model.dto.CreateTrackDto
 import com.example.viniloscompose.ui.shared.BottomNavigationSection
 import com.example.viniloscompose.ui.shared.ContentDescriptions
 import com.example.viniloscompose.ui.shared.LoginType
@@ -63,7 +65,9 @@ fun searchForMusicianCardByText(composeTestRule: ComposeContentTestRule, text: S
         )
 }
 
-fun searchForAllNodesWithDescription(composeTestRule: ComposeContentTestRule, contentDescription: ContentDescriptions): SemanticsNodeInteractionCollection {
+fun searchForAllNodesWithDescription(
+    composeTestRule: ComposeContentTestRule, contentDescription: ContentDescriptions
+): SemanticsNodeInteractionCollection {
     return composeTestRule.onAllNodesWithContentDescription(contentDescription.value)
 }
 
@@ -72,11 +76,48 @@ fun searchForAllMusicianCards(composeTestRule: ComposeContentTestRule): Semantic
 }
 
 fun searchForFirstMusicianCard(composeTestRule: ComposeContentTestRule): SemanticsNodeInteraction {
-    return searchForAllMusicianCards(composeTestRule)
-        .onFirst()
+    return searchForAllMusicianCards(composeTestRule).onFirst()
 }
 
 fun searchForLastMusicianCard(composeTestRule: ComposeContentTestRule): SemanticsNodeInteraction {
-    return searchForAllMusicianCards(composeTestRule)
-        .onLast()
+    return searchForAllMusicianCards(composeTestRule).onLast()
+}
+
+fun addTrack(
+    composeTestRule: ComposeContentTestRule,
+    track: CreateTrackDto
+) {
+    composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_DETAIL_TRACK_CREATE.value)
+        .performClick()
+    composeTestRule.waitUntil {
+        composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_DETAIL_FORM_TITLE.value)
+            .isDisplayed()
+    }
+    setTrackName(composeTestRule, track.name)
+    setTrackDuration(composeTestRule, track.duration)
+    clickContentDescription(composeTestRule, ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_CREATE)
+}
+
+fun setTrackName(composeTestRule: ComposeContentTestRule, name: String) {
+    composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_NAME.value)
+        .performTextInput(name)
+    composeTestRule.waitUntil { composeTestRule.onNodeWithText(name).isDisplayed() }
+}
+
+fun setTrackDuration(composeTestRule: ComposeContentTestRule, duration: String) {
+    composeTestRule.onNodeWithContentDescription(ContentDescriptions.ALBUM_DETAIL_TRACK_FORM_DURATION.value)
+        .performClick()
+        .performTextInput(duration)
+    composeTestRule.waitUntil { composeTestRule.onNodeWithText(duration).isDisplayed() }
+}
+
+fun clickContentDescription(
+    composeTestRule: ComposeContentTestRule, description: ContentDescriptions
+) {
+    composeTestRule.onNodeWithContentDescription(description.value).performClick()
+}
+
+fun  clickAlbumsTab(composeTestRule: ComposeContentTestRule){
+    composeTestRule.onNodeWithContentDescription(ContentDescriptions.COLLECTOR_DETAIL_ALBUMS_TAB.value)
+        .performClick()
 }

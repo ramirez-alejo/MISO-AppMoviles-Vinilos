@@ -20,8 +20,8 @@ class CollectorRepository(
 
     suspend fun refreshData(): List<CollectorDto>{
         var collectors = getCollectors()
-        return if(collectors.isNullOrEmpty()){
-            if(!networkValidator.isNetworkAvailable()){
+        return collectors.ifEmpty {
+            if (!networkValidator.isNetworkAvailable()) {
                 println("DOESNT HAVE NETWORK AVAILABLE")
                 emptyList()
             } else {
@@ -29,12 +29,17 @@ class CollectorRepository(
                 setCollectors(collectors)
                 collectors
             }
-        } else collectors
+        }
     }
+
 
     private fun setCollectors(collectors: List<CollectorDto>){
         if(!cacheManager.hasCollection(CacheManager.COLLECTORS_SPREFS)){
             cacheManager.setCollectors(collectors)
         }
+    }
+
+    fun  getCollector(collectorId:Int):CollectorDto{
+        return cacheManager.getCollectors().first { it.id == collectorId }
     }
 }
